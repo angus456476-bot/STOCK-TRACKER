@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<style>
+:root {
+  --bg:#0d0d0d; --surface:#161616; --surface2:#1e1e1e; --border:#2a2a2a;
+  --text:#e8e8e0; --muted:#555; --accent:#c8ff00; --pos:#39d98a; --neg:#ff4d4d;
+  --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:28px;line-height:1.5;min-height:100vh;}
+
+/* Auth */
+#authScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.auth-box{width:500px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:56px 48px;}
+.auth-logo{font-family:var(--mono);font-size:13px;letter-spacing:0.2em;color:var(--accent);margin-bottom:40px;text-transform:uppercase;}
+.auth-title{font-family:var(--mono);font-size:32px;font-weight:600;margin-bottom:8px;}
+.auth-sub{font-size:20px;color:var(--muted);margin-bottom:40px;}
+.auth-input{width:100%;padding:16px 18px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:22px;margin-bottom:16px;outline:none;transition:border-color .2s;}
+.auth-input:focus{border-color:var(--accent);}
+.auth-actions{display:flex;gap:12px;margin-top:8px;}
+.btn-auth-p{flex:1;padding:16px;background:var(--accent);color:#0d0d0d;border:none;border-radius:8px;font-family:var(--mono);font-size:20px;font-weight:600;cursor:pointer;transition:opacity .2s;}
+.btn-auth-p:hover{opacity:.85;}
+.btn-auth-o{flex:1;padding:16px;background:none;color:var(--text);border:1px solid var(--border);border-radius:8px;font-family:var(--mono);font-size:20px;cursor:pointer;transition:border-color .2s;}
+.btn-auth-o:hover{border-color:var(--text);}
+.auth-error{font-family:var(--mono);font-size:18px;color:var(--neg);margin-top:16px;min-height:24px;}
+
+/* App */
+#appScreen{display:none;min-height:100vh;}
+.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;padding:40px 0;}
+.sidebar-logo{font-family:var(--mono);font-size:13px;letter-spacing:0.18em;color:var(--accent);padding:0 28px 36px;border-bottom:1px solid var(--border);}
+.nav{padding:20px 0;flex:1;}
+.nav-item{display:flex;align-items:center;gap:14px;padding:14px 28px;cursor:pointer;color:var(--muted);font-size:22px;font-family:var(--mono);transition:all .15s;border-left:3px solid transparent;}
+.nav-item:hover{color:var(--text);background:var(--surface2);}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:var(--surface2);}
+.sidebar-footer{padding:24px 28px;border-top:1px solid var(--border);}
+.user-email{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:12px;word-break:break-all;}
+.btn-logout{width:100%;padding:10px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-family:var(--mono);font-size:16px;cursor:pointer;transition:all .15s;}
+.btn-logout:hover{border-color:var(--neg);color:var(--neg);}
+.main{margin-left:240px;padding:48px 56px;max-width:calc(100vw - 240px);}
+.page{display:none;}.page.active{display:block;}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:40px;}
+.page-title{font-family:var(--mono);font-size:36px;font-weight:600;}
+.page-sub{font-size:18px;color:var(--muted);margin-top:4px;font-family:var(--mono);}
+.top-bar{display:flex;align-items:center;gap:20px;}
+
+/* Stats */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:28px;}
+.stat-label{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;}
+.stat-value{font-family:var(--mono);font-size:32px;font-weight:500;}
+.stat-value.pos{color:var(--pos);}.stat-value.neg{color:var(--neg);}
+
+/* Chart */
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:32px;margin-bottom:40px;}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+.section-label{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.toggle-group{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.toggle-btn{padding:10px 20px;font-family:var(--mono);font-size:18px;background:none;border:none;color:var(--muted);cursor:pointer;transition:all .15s;}
+.toggle-btn.active{background:var(--accent);color:#0d0d0d;font-weight:600;}
+.toggle-btn:not(.active):hover{background:var(--surface2);color:var(--text);}
+.chart-body{display:flex;align-items:center;gap:48px;}
+.chart-canvas-wrap{width:240px;height:240px;flex-shrink:0;}
+.chart-legend{flex:1;}
+.legend-row{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:12px;}
+.legend-row:last-child{border-bottom:none;}
+.legend-left{display:flex;align-items:center;gap:12px;flex:1;}
+.ldot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.lname{font-family:var(--mono);font-size:20px;}
+.lpct{font-family:var(--mono);font-size:18px;color:var(--muted);width:70px;text-align:right;}
+.lval{font-family:var(--mono);font-size:20px;width:140px;text-align:right;}
+
+/* Table */
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.table-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead th{font-family:var(--mono);font-size:15px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;padding:16px 22px;text-align:right;background:var(--surface2);border-bottom:1px solid var(--border);white-space:nowrap;}
+thead th:first-child{text-align:left;}
+tbody td{font-family:var(--mono);font-size:22px;padding:18px 22px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody td:first-child{text-align:left;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:var(--surface2);}
+.sym-cell{font-weight:600;}
+.pos{color:var(--pos);}.neg{color:var(--neg);}
+.empty-td{text-align:center!important;color:var(--muted);padding:60px!important;font-size:20px;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-family:var(--mono);font-size:20px;cursor:pointer;border:none;transition:all .15s;}
+.btn-primary{background:var(--accent);color:#0d0d0d;font-weight:600;}
+.btn-primary:hover{opacity:.85;}
+.btn-outline{background:none;border:1px solid var(--border);color:var(--text);}
+.btn-outline:hover{border-color:var(--text);}
+.icon-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;font-size:18px;cursor:pointer;transition:all .15s;font-family:var(--mono);}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent);}
+.icon-btn.del:hover{border-color:var(--neg);color:var(--neg);}
+.action-cell{display:flex;gap:8px;justify-content:flex-end;}
+.badge{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:15px;font-weight:500;}
+.badge-buy{background:rgba(57,217,138,.15);color:var(--pos);}
+.badge-sell{background:rgba(255,77,77,.15);color:var(--neg);}
+.badge-div{background:rgba(200,255,0,.12);color:var(--accent);}
+
+/* Watchlist */
+.watchlist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.watch-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;position:relative;transition:border-color .15s;}
+.watch-card:hover{border-color:var(--accent);}
+.watch-remove{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;}
+.watch-remove:hover{color:var(--neg);}
+.watch-sym{font-family:var(--mono);font-size:28px;font-weight:600;margin-bottom:12px;}
+.watch-price{font-family:var(--mono);font-size:32px;font-weight:300;}
+
+/* Filter */
+.filter-select{padding:10px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:20px;outline:none;cursor:pointer;}
+.filter-select:focus{border-color:var(--accent);}
+
+/* Cash */
+.cash-bar{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:20px;color:var(--muted);}
+.cash-edit-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;}
+.cash-edit-btn:hover{color:var(--accent);}
+.refresh-bar{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:16px;color:var(--muted);}
+.dot-live{width:8px;height:8px;border-radius:50%;background:var(--pos);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:40px;width:480px;max-width:92vw;}
+.modal-title{font-family:var(--mono);font-size:28px;font-weight:600;margin-bottom:28px;}
+.type-toggle{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:24px;}
+.type-btn{flex:1;padding:12px;font-family:var(--mono);font-size:22px;background:none;border:none;color:var(--muted);cursor:pointer;transition:all .15s;}
+.type-btn.buy.active{background:rgba(57,217,138,.2);color:var(--pos);font-weight:600;}
+.type-btn.sell.active{background:rgba(255,77,77,.2);color:var(--neg);font-weight:600;}
+.form-group{margin-bottom:20px;}
+.form-label{display:block;font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+.form-input{width:100%;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:24px;outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:var(--accent);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:28px;}
+.empty-msg{font-family:var(--mono);font-size:22px;color:var(--muted);padding:60px;text-align:center;}
+</style>
+</head>
+<body>
+
+<!-- Auth -->
+<div id="authScreen">
+  <div class="auth-box">
+    <div class="auth-logo">◈ STOCK TRACKER</div>
+    <div class="auth-title">歡迎回來</div>
+    <div class="auth-sub">登入或建立帳號</div>
+    <input class="auth-input" id="authEmail" type="email" placeholder="Email">
+    <input class="auth-input" id="authPass" type="password" placeholder="密碼（至少 6 位）">
+    <div class="auth-actions">
+      <button class="btn-auth-p" onclick="doLogin()">登入</button>
+      <button class="btn-auth-o" onclick="doRegister()">註冊</button>
+    </div>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="appScreen">
+  <aside class="sidebar">
+    <div class="sidebar-logo">◈ STOCK TRACKER</div>
+    <nav class="nav">
+      <div class="nav-item active" onclick="navigate('dashboard',this)"><span>▦</span> 總覽</div>
+      <div class="nav-item" onclick="navigate('holdings',this)"><span>◈</span> 持倉</div>
+      <div class="nav-item" onclick="navigate('history',this)"><span>≡</span> 交易紀錄</div>
+      <div class="nav-item" onclick="navigate('watchlist',this)"><span>◎</span> 自選股</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-email" id="userEmail"></div>
+      <button class="btn-logout" onclick="doLogout()">登出</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- Dashboard -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div><div class="page-title">總覽</div><div class="page-sub">投資組合概況</div></div>
+        <div class="top-bar">
+          <div class="cash-bar">現金 $<span id="cashDisplay">0.00</span><button class="cash-edit-btn" onclick="openCashModal()">✎</button></div>
+          <div class="refresh-bar"><div class="dot-live"></div><span id="lastUpdate">—</span></div>
+        </div>
+      </div>
+      <div class="stat-row" style="margin-bottom:16px">
+        <div class="stat-card"><div class="stat-label">總投入成本</div><div class="stat-value" id="totalCost">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">股票市值</div><div class="stat-value" id="totalValue">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">現金</div><div class="stat-value" id="cashCard">$0.00</div></div>
+      </div>
+      <div class="stat-row" style="margin-bottom:32px">
+        <div class="stat-card"><div class="stat-label">未實現報酬</div><div class="stat-value" id="unrealizedPnl">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">未實現報酬率</div><div class="stat-value" id="unrealizedRate">0.00%</div></div>
+        <div class="stat-card"><div class="stat-label">已實現報酬</div><div class="stat-value" id="realizedPnl">$0.00</div></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="section-label">資金配置</div>
+          <div class="toggle-group">
+            <button class="toggle-btn active" id="togOverall" onclick="setChartMode('overall')">整體</button>
+            <button class="toggle-btn" id="togDetail" onclick="setChartMode('detail')">個股</button>
+          </div>
+        </div>
+        <div class="chart-body">
+          <div class="chart-canvas-wrap"><canvas id="pieChart"></canvas></div>
+          <div class="chart-legend" id="chartLegend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Holdings -->
+    <div class="page" id="page-holdings">
+      <div class="page-header">
+        <div><div class="page-title">持倉</div><div class="page-sub">目前持有股票</div></div>
+        <div class="top-bar">
+          <button class="btn btn-outline" onclick="refreshPrices()">↻ 更新股價</button>
+          <button class="btn btn-primary" onclick="openTradeModal()">＋ 新增交易</button>
+        </div>
+      </div>
+      <div class="table-card"><div class="table-scroll">
+        <table>
+          <thead><tr><th>代號</th><th>報酬率</th><th>報酬</th><th>現價</th><th>均價</th><th>總成本</th><th>市值</th><th>持股數</th></tr></thead>
+          <tbody id="holdingsBody"><tr><td colspan="8" class="empty-td">尚無持倉</td></tr></tbody>
+        </table>
+      </div></div>
+    </div>
+
+    <!-- History -->
+    <div class="page" id="page-history">
+      <div class="page-header">
+        <div><div class="page-title">交易紀錄</div><div class="page-sub">所有買賣與配息</div></div>
+        <div class="top-bar">
+          <select class="filter-select" id="historyFilterSel" onchange="renderHistory()"><option value="ALL">全部</option></select>
+          <button class="btn btn-primary" onclick="openTradeModal()">＋ 新增交易</button>
+        </div>
+      </div>
+      <div class="table-card"><div class="table-scroll">
+        <table>
+          <thead><tr><th style="text-align:left">日期</th><th style="text-align:left">代號</th><th style="text-align:left">類型</th><th>股數</th><th>價格</th><th>金額</th><th>損益</th><th></th></tr></thead>
+          <tbody id="historyBody"><tr><td colspan="8" class="empty-td">尚無紀錄</td></tr></tbody>
+        </table>
+      </div></div>
+    </div>
+
+    <!-- Watchlist -->
+    <div class="page" id="page-watchlist">
+      <div class="page-header">
+        <div><div class="page-title">自選股</div><div class="page-sub">追蹤關注的股票</div></div>
+        <div class="top-bar">
+          <button class="btn btn-outline" onclick="refreshPrices()">↻ 更新</button>
+          <button class="btn btn-primary" onclick="openWatchModal()">＋ 加入自選</button>
+        </div>
+      </div>
+      <div class="watchlist-grid" id="watchlistGrid"><div class="empty-msg" style="grid-column:1/-1">尚無自選股</div></div>
+    </div>
+  </main>
+</div>
+
+<!-- Trade Modal -->
+<div class="modal-overlay" id="tradeModal">
+  <div class="modal">
+    <div class="modal-title" id="tradeModalTitle">新增交易</div>
+    <div class="type-toggle">
+      <button class="type-btn buy active" id="typeBuy" onclick="setTradeType('buy')">買入</button>
+      <button class="type-btn sell" id="typeSell" onclick="setTradeType('sell')">賣出</button>
+    </div>
+    <div class="form-group"><label class="form-label">股票代號</label><input class="form-input" id="tradeSymbol" placeholder="如 AAPL" oninput="this.value=this.value.toUpperCase()"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">股數</label><input class="form-input" id="tradeShares" type="number" min="0.001" step="any" placeholder="0"></div>
+      <div class="form-group"><label class="form-label">價格 (USD)</label><input class="form-input" id="tradePrice" type="number" min="0.01" step="any" placeholder="0.00"></div>
+    </div>
+    <div class="form-group"><label class="form-label">日期</label><input class="form-input" id="tradeDate" type="date"></div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal('tradeModal')">取消</button>
+      <button class="btn btn-primary" onclick="submitTrade()">確認</button>
+    </div>
+  </div>
+</div>
+
+<!-- Watch Modal -->
+<div class="modal-overlay" id="watchModal">
+  <div class="modal">
+    <div class="modal-title">加入自選股</div>
+    <div class="form-group"><label class="form-label">股票代號</label><input class="form-input" id="watchSymbol" placeholder="如 NVDA" oninput="this.value=this.value.toUpperCase()"></div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal('watchModal')">取消</button>
+      <button class="btn btn-primary" onclick="submitWatch()">加入</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cash Modal -->
+<div class="modal-overlay" id="cashModal">
+  <div class="modal">
+    <div class="modal-title">設定現金</div>
+    <div class="form-group"><label class="form-label">現金金額 (USD)</label><input class="form-input" id="cashInput" type="number" min="0" step="any" placeholder="0.00"></div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal('cashModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveCash()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Firebase init (compat SDK = global scope, no module needed) ──
+const firebaseConfig = {
+  apiKey: "AIzaSyAmgfFdLpgAXe1nI-KaNXC9gGawGVK6hKM",
+  authDomain: "stock-tracker-5e283.firebaseapp.com",
+  projectId: "stock-tracker-5e283",
+  storageBucket: "stock-tracker-5e283.firebasestorage.app",
+  messagingSenderId: "459647271707",
+  appId: "1:459647271707:web:1a7f7c232508d4e3a689be"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+const POLYGON = 'deMuTwmP4LD5oYnwY8b8GLlV1AVk49q2';
+
+// ── State ──
+let state    = { cash:0, trades:[], watchlist:[], prices:{}, dividends:[] };
+let holdings = {};
+let currentUser = null;
+let pieChart    = null;
+let chartMode   = 'overall';
+let tradeType   = 'buy';
+let editingId   = null;
+
+// ── Helpers ──
+const g   = id => document.getElementById(id);
+const fmt = n  => Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const today = () => new Date().toISOString().split('T')[0];
+
+// ── Firestore ──
+async function saveState() {
+  if (!currentUser) return;
+  const payload = JSON.parse(JSON.stringify({ ...state, _h: holdings }));
+  await db.collection('users').doc(currentUser.uid).set(payload);
+}
+
+async function loadState() {
+  const snap = await db.collection('users').doc(currentUser.uid).get();
+  if (snap.exists) {
+    const d = snap.data();
+    state = { cash:0, trades:[], watchlist:[], prices:{}, dividends:[], ...d };
+    delete state._h;
+    rebuildHoldings();
+    if (d.prices) state.prices = d.prices;
+  }
+}
+
+// ── Auth ──
+auth.onAuthStateChanged(async user => {
+  if (user) {
+    currentUser = user;
+    g('authScreen').style.display = 'none';
+    g('appScreen').style.display  = 'flex';
+    g('userEmail').textContent    = user.email;
+    await loadState();
+    await refreshPrices();
+    renderAll();
+  } else {
+    currentUser = null;
+    g('authScreen').style.display = 'flex';
+    g('appScreen').style.display  = 'none';
+  }
+});
+
+function authErrMsg(code) {
+  const m = {
+    'auth/email-already-in-use':'此 Email 已被註冊',
+    'auth/invalid-email':'Email 格式錯誤',
+    'auth/weak-password':'密碼至少需要 6 個字元',
+    'auth/user-not-found':'帳號不存在',
+    'auth/wrong-password':'密碼錯誤',
+    'auth/invalid-credential':'帳號或密碼錯誤'
+  };
+  return m[code] || '發生錯誤，請重試';
+}
+
+async function doLogin() {
+  const e = g('authEmail').value.trim(), p = g('authPass').value;
+  g('authError').textContent = '';
+  try { await auth.signInWithEmailAndPassword(e, p); }
+  catch(err) { g('authError').textContent = authErrMsg(err.code); }
+}
+
+async function doRegister() {
+  const e = g('authEmail').value.trim(), p = g('authPass').value;
+  g('authError').textContent = '';
+  try { await auth.createUserWithEmailAndPassword(e, p); }
+  catch(err) { g('authError').textContent = authErrMsg(err.code); }
+}
+
+function doLogout() { auth.signOut(); }
+
+// ── Polygon ──
+async function fetchPrice(sym) {
+  try {
+    let r = await fetch(`https://api.polygon.io/v2/last/trade/${sym}?apiKey=${POLYGON}`);
+    let d = await r.json();
+    if (d.results?.p) return d.results.p;
+    r = await fetch(`https://api.polygon.io/v2/aggs/ticker/${sym}/prev?adjusted=true&apiKey=${POLYGON}`);
+    d = await r.json();
+    if (d.results?.[0]) return d.results[0].c;
+  } catch(e) {}
+  return null;
+}
+
+async function fetchDividends(sym) {
+  try {
+    const r = await fetch(`https://api.polygon.io/v3/reference/dividends?ticker=${sym}&limit=20&apiKey=${POLYGON}`);
+    const d = await r.json();
+    return d.results || [];
+  } catch(e) { return []; }
+}
+
+async function refreshPrices() {
+  const syms = [...new Set([...Object.keys(holdings), ...state.watchlist])];
+  for (const s of syms) { const p = await fetchPrice(s); if (p) state.prices[s] = p; }
+  g('lastUpdate').textContent = new Date().toLocaleTimeString('zh-TW');
+  await checkDividends();
+  await saveState();
+  renderAll();
+}
+
+async function checkDividends() {
+  if (!state.dividends) state.dividends = [];
+  for (const sym of Object.keys(holdings)) {
+    const divs = await fetchDividends(sym);
+    for (const div of divs) {
+      const exDate = div.ex_dividend_date;
+      if (state.dividends.some(d => d.sym === sym && d.ex === exDate)) continue;
+      const h = holdings[sym];
+      if (!h || h.shares <= 0) continue;
+      const amount = div.cash_amount * h.shares;
+      state.dividends.push({ sym, ex: exDate });
+      state.cash += amount;
+      state.trades.push({
+        id: Date.now() + Math.random(),
+        type: 'dividend', symbol: sym,
+        shares: h.shares, price: div.cash_amount,
+        date: exDate, pnl: amount
+      });
+    }
+  }
+}
+
+// ── Holdings (Avg Cost Method) ──
+function rebuildHoldings() {
+  holdings = {};
+  for (const t of state.trades) {
+    const sym = t.symbol;
+    if (t.type === 'buy') {
+      if (!holdings[sym]) holdings[sym] = { shares:0, avgCost:0, totalCost:0 };
+      const h  = holdings[sym];
+      const nc = h.totalCost + t.shares * t.price;
+      const ns = h.shares + t.shares;
+      h.avgCost = nc / ns; h.shares = ns; h.totalCost = nc;
+      t.pnl = null;
+    } else if (t.type === 'sell') {
+      if (!holdings[sym]) continue;
+      const h = holdings[sym];
+      t.pnl = (t.price - h.avgCost) * t.shares;
+      h.shares -= t.shares;
+      h.totalCost = h.avgCost * h.shares;
+      if (h.shares <= 0.00001) delete holdings[sym];
+    }
+  }
+}
+
+// ── Stats ──
+function computeStats() {
+  let cost=0, value=0;
+  for (const [s,h] of Object.entries(holdings)) {
+    cost  += h.totalCost;
+    value += h.shares * (state.prices[s] || h.avgCost);
+  }
+  const uPnl  = value - cost;
+  const uRate = cost > 0 ? (uPnl/cost)*100 : 0;
+  let rPnl = 0;
+  for (const t of state.trades)
+    if ((t.type==='sell'||t.type==='dividend') && t.pnl!=null) rPnl += t.pnl;
+  return { cost, value, uPnl, uRate, rPnl };
+}
+
+// ── Render ──
+function renderAll() { renderDashboard(); renderHoldings(); renderHistory(); renderWatchlist(); }
+
+function renderDashboard() {
+  const { cost, value, uPnl, uRate, rPnl } = computeStats();
+  g('totalCost').textContent  = '$'+fmt(cost);
+  g('totalValue').textContent = '$'+fmt(value);
+  g('cashDisplay').textContent = fmt(state.cash);
+  g('cashCard').textContent   = '$'+fmt(state.cash);
+
+  const uPEl=g('unrealizedPnl'), uREl=g('unrealizedRate'), rEl=g('realizedPnl');
+  uPEl.textContent = (uPnl>=0?'+$':'-$')+fmt(Math.abs(uPnl));
+  uREl.textContent = (uRate>=0?'+':'')+uRate.toFixed(2)+'%';
+  rEl.textContent  = (rPnl>=0?'+$':'-$')+fmt(Math.abs(rPnl));
+  uPEl.className = 'stat-value '+(uPnl>=0?'pos':'neg');
+  uREl.className = 'stat-value '+(uRate>=0?'pos':'neg');
+  rEl.className  = 'stat-value '+(rPnl>=0?'pos':'neg');
+  renderChart(value);
+}
+
+function renderChart(totalValue) {
+  const COLS=['#c8ff00','#00e5ff','#ff6b35','#a78bfa','#34d399','#f472b6','#fbbf24','#60a5fa'];
+  const labels=[],values=[],colors=[];
+  if (state.cash>0) { labels.push('現金'); values.push(state.cash); colors.push('#444'); }
+  if (chartMode==='overall') {
+    if (totalValue>0) { labels.push('股票'); values.push(totalValue); colors.push(COLS[0]); }
+  } else {
+    let ci=0;
+    for (const [s,h] of Object.entries(holdings)) {
+      const v = h.shares*(state.prices[s]||h.avgCost);
+      if (v>0) { labels.push(s); values.push(v); colors.push(COLS[ci++%COLS.length]); }
+    }
+  }
+  const total=values.reduce((a,b)=>a+b,0);
+  g('chartLegend').innerHTML = labels.length
+    ? labels.map((l,i)=>`<div class="legend-row"><div class="legend-left"><span class="ldot" style="background:${colors[i]}"></span><span class="lname">${l}</span></div><span class="lpct">${total>0?((values[i]/total)*100).toFixed(1):0}%</span><span class="lval">$${fmt(values[i])}</span></div>`).join('')
+    : '<div class="empty-msg">尚無資料</div>';
+  if (pieChart) pieChart.destroy();
+  if (!values.length) return;
+  pieChart = new Chart(g('pieChart').getContext('2d'),{
+    type:'doughnut',
+    data:{labels,datasets:[{data:values,backgroundColor:colors,borderWidth:3,borderColor:'#111'}]},
+    options:{cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` $${fmt(c.raw)} (${total>0?((c.raw/total)*100).toFixed(1):0}%)`}}},animation:{duration:600}}
+  });
+}
+
+function setChartMode(mode) {
+  chartMode=mode;
+  g('togOverall').classList.toggle('active',mode==='overall');
+  g('togDetail').classList.toggle('active',mode==='detail');
+  renderChart(computeStats().value);
+}
+
+function renderHoldings() {
+  const tbody=g('holdingsBody'), entries=Object.entries(holdings);
+  if (!entries.length){tbody.innerHTML='<tr><td colspan="8" class="empty-td">尚無持倉</td></tr>';return;}
+  tbody.innerHTML=entries.map(([sym,h])=>{
+    const price=state.prices[sym]||h.avgCost, val=h.shares*price;
+    const ret=val-h.totalCost, rate=h.totalCost>0?(ret/h.totalCost)*100:0;
+    const c=rate>=0?'pos':'neg';
+    return `<tr>
+      <td class="sym-cell">${sym}</td>
+      <td class="${c}">${rate>=0?'+':''}${rate.toFixed(2)}%</td>
+      <td class="${ret>=0?'pos':'neg'}">${ret>=0?'+$':'-$'}${fmt(Math.abs(ret))}</td>
+      <td>${fmt(price)}</td><td>${fmt(h.avgCost)}</td><td>${fmt(h.totalCost)}</td><td>${fmt(val)}</td>
+      <td>${h.shares%1===0?h.shares:h.shares.toFixed(4)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderHistory() {
+  const syms=[...new Set(state.trades.map(t=>t.symbol))];
+  const sel=g('historyFilterSel'), cur=sel.value||'ALL';
+  sel.innerHTML='<option value="ALL">全部</option>'+syms.map(s=>`<option value="${s}"${s===cur?' selected':''}>${s}</option>`).join('');
+  let trades=[...state.trades].reverse();
+  if (cur!=='ALL') trades=trades.filter(t=>t.symbol===cur);
+  const tbody=g('historyBody');
+  if (!trades.length){tbody.innerHTML='<tr><td colspan="8" class="empty-td">尚無紀錄</td></tr>';return;}
+  tbody.innerHTML=trades.map(t=>{
+    const amt=t.shares*t.price;
+    const tl=t.type==='buy'?'買入':t.type==='sell'?'賣出':'配息';
+    const tc=t.type==='buy'?'badge-buy':t.type==='sell'?'badge-sell':'badge-div';
+    const pnl=(t.type==='sell'||t.type==='dividend')&&t.pnl!=null
+      ?`<span class="${t.pnl>=0?'pos':'neg'}">${t.pnl>=0?'+':'-'}$${fmt(Math.abs(t.pnl))}</span>`:'—';
+    const editBtn=t.type!=='dividend'?`<button class="icon-btn" onclick="openEditTrade(${t.id})">✎</button>`:'';
+    return `<tr>
+      <td style="text-align:left">${t.date}</td>
+      <td style="text-align:left" class="sym-cell">${t.symbol}</td>
+      <td style="text-align:left"><span class="badge ${tc}">${tl}</span></td>
+      <td>${t.shares%1===0?t.shares:t.shares.toFixed(4)}</td>
+      <td>${fmt(t.price)}</td><td>${fmt(amt)}</td><td>${pnl}</td>
+      <td class="action-cell">${editBtn}<button class="icon-btn del" onclick="deleteTrade(${t.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function deleteTrade(id) {
+  if (!confirm('確定刪除此筆紀錄？')) return;
+  const t = state.trades.find(t=>t.id===id);
+  if (t && t.type==='sell') state.cash -= t.shares*t.price;
+  state.trades = state.trades.filter(t=>t.id!==id);
+  rebuildHoldings();
+  await saveState(); renderAll();
+}
+
+function openEditTrade(id) {
+  const t=state.trades.find(t=>t.id===id); if(!t) return;
+  editingId=id; tradeType=t.type;
+  g('tradeModalTitle').textContent='編輯交易';
+  g('typeBuy').classList.toggle('active',t.type==='buy');
+  g('typeSell').classList.toggle('active',t.type==='sell');
+  g('tradeSymbol').value=t.symbol; g('tradeShares').value=t.shares;
+  g('tradePrice').value=t.price; g('tradeDate').value=t.date;
+  g('tradeModal').classList.add('open');
+}
+
+function renderWatchlist() {
+  const grid=g('watchlistGrid');
+  if (!state.watchlist.length){grid.innerHTML='<div class="empty-msg" style="grid-column:1/-1">尚無自選股</div>';return;}
+  grid.innerHTML=state.watchlist.map(sym=>{
+    const p=state.prices[sym];
+    return `<div class="watch-card">
+      <button class="watch-remove" onclick="removeWatch('${sym}')">×</button>
+      <div class="watch-sym">${sym}</div>
+      <div class="watch-price">${p?'$'+fmt(p):'—'}</div>
+    </div>`;
+  }).join('');
+}
+
+async function removeWatch(sym) {
+  state.watchlist=state.watchlist.filter(s=>s!==sym);
+  await saveState(); renderWatchlist();
+}
+
+// ── Modals ──
+function openTradeModal() {
+  editingId=null; tradeType='buy';
+  g('tradeModalTitle').textContent='新增交易';
+  g('typeBuy').classList.add('active'); g('typeSell').classList.remove('active');
+  g('tradeSymbol').value=''; g('tradeShares').value=''; g('tradePrice').value='';
+  g('tradeDate').value=today();
+  g('tradeModal').classList.add('open');
+}
+
+function setTradeType(type) {
+  tradeType=type;
+  g('typeBuy').classList.toggle('active',type==='buy');
+  g('typeSell').classList.toggle('active',type==='sell');
+}
+
+async function submitTrade() {
+  const symbol=g('tradeSymbol').value.trim().toUpperCase();
+  const shares=parseFloat(g('tradeShares').value);
+  const price=parseFloat(g('tradePrice').value);
+  const date=g('tradeDate').value;
+  if (!symbol||isNaN(shares)||isNaN(price)||!date){alert('請填寫所有欄位');return;}
+
+  if (editingId) {
+    const idx=state.trades.findIndex(t=>t.id===editingId);
+    if (idx!==-1) {
+      const old=state.trades[idx];
+      if (old.type==='sell') state.cash=state.cash-old.shares*old.price+(tradeType==='sell'?shares*price:0);
+      state.trades[idx]={...old,type:tradeType,symbol,shares,price,date};
+    }
+  } else {
+    if (tradeType==='sell') {
+      const h=holdings[symbol];
+      if (!h||h.shares<shares){alert('賣出股數超過持有量');return;}
+      state.cash+=shares*price;
+    }
+    state.trades.push({id:Date.now(),type:tradeType,symbol,shares,price,date,pnl:null});
+  }
+
+  rebuildHoldings();
+  if (!state.prices[symbol]){const p=await fetchPrice(symbol);if(p)state.prices[symbol]=p;}
+  await saveState(); closeModal('tradeModal'); renderAll();
+}
+
+function openWatchModal(){g('watchSymbol').value='';g('watchModal').classList.add('open');}
+
+async function submitWatch() {
+  const sym=g('watchSymbol').value.trim().toUpperCase(); if(!sym) return;
+  if (!state.watchlist.includes(sym)){
+    state.watchlist.push(sym);
+    const p=await fetchPrice(sym);if(p)state.prices[sym]=p;
+    await saveState(); renderWatchlist();
+  }
+  closeModal('watchModal');
+}
+
+function openCashModal(){g('cashInput').value=state.cash;g('cashModal').classList.add('open');}
+
+async function saveCash() {
+  const v=parseFloat(g('cashInput').value);
+  if(!isNaN(v)){state.cash=v;await saveState();}
+  closeModal('cashModal'); renderDashboard();
+}
+
+function closeModal(id){g(id).classList.remove('open');}
+
+function navigate(page,el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  g('page-'+page).classList.add('active');
+  if(el) el.classList.add('active');
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el=>{
+  el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});
+});
+</script>
+</body>
+</html>
