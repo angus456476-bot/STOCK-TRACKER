@@ -140,11 +140,10 @@ tbody tr:hover{background:var(--surface2);}
 .bs{background:rgba(255,77,77,.15);color:var(--neg);}
 .bd{background:rgba(59,130,246,.15);color:var(--accent);}
 
-/* Progress bar */
-.progress-wrap{margin-bottom:8px;display:none;}
+.progress-wrap{margin-bottom:16px;display:none;}
 .progress-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
 .progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
-.progress-label{font-family:var(--mono);font-size:14px;color:var(--muted);margin-top:4px;}
+.progress-label{font-family:var(--mono);font-size:14px;color:var(--muted);margin-top:6px;}
 
 .spin{display:inline-block;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -160,6 +159,7 @@ tbody tr:hover{background:var(--surface2);}
 .wrem:hover{color:var(--neg);}
 .wsym{font-family:var(--mono);font-size:24px;font-weight:600;margin-bottom:8px;}
 .wprice{font-family:var(--mono);font-size:28px;font-weight:300;}
+.wchange{font-family:var(--mono);font-size:16px;margin-top:4px;}
 
 .fsel{padding:9px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:var(--mono);font-size:18px;outline:none;cursor:pointer;}
 .fsel:focus{border-color:var(--accent);}
@@ -257,10 +257,9 @@ tbody tr:hover{background:var(--surface2);}
         <div class="top-bar">
           <div class="cash-bar">現金 $<span id="cashDisplay">0.00</span><button class="cedit" onclick="openCashModal()">✎</button></div>
           <div class="rbar"><div class="dlive"></div><span id="lastUpdate">—</span></div>
-          <button class="btn btn-o" id="refreshBtn" onclick="refreshPrices()" style="font-size:16px;padding:8px 14px;">↻ 更新</button>
+          <button class="btn btn-o" id="refreshBtn" onclick="refreshPrices(true)" style="font-size:16px;padding:8px 14px;">↻ 更新</button>
         </div>
       </div>
-      <!-- Progress bar -->
       <div class="progress-wrap" id="progressWrap">
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
         <div class="progress-label" id="progressLabel"></div>
@@ -306,7 +305,7 @@ tbody tr:hover{background:var(--surface2);}
       <div class="page-header">
         <div><div class="page-title">持倉</div><div class="page-sub">點擊代號展開詳情</div></div>
         <div class="top-bar">
-          <button class="btn btn-o" onclick="refreshPrices()">↻ 更新</button>
+          <button class="btn btn-o" onclick="refreshPrices(true)">↻ 更新</button>
           <button class="btn btn-p" onclick="openTradeModal()">＋ 新增交易</button>
         </div>
       </div>
@@ -351,7 +350,7 @@ tbody tr:hover{background:var(--surface2);}
       <div class="page-header">
         <div><div class="page-title">自選股</div><div class="page-sub">追蹤關注的股票</div></div>
         <div class="top-bar">
-          <button class="btn btn-o" onclick="refreshPrices()">↻ 更新</button>
+          <button class="btn btn-o" onclick="refreshPrices(true)">↻ 更新</button>
           <button class="btn btn-p" onclick="openWatchModal()">＋ 加入</button>
         </div>
       </div>
@@ -360,7 +359,7 @@ tbody tr:hover{background:var(--surface2);}
   </main>
 </div>
 
-<!-- Trade Modal -->
+<!-- Modals -->
 <div class="moverlay" id="tradeModal">
   <div class="modal">
     <div class="mtitle" id="tradeMTitle">新增交易</div>
@@ -381,7 +380,6 @@ tbody tr:hover{background:var(--surface2);}
   </div>
 </div>
 
-<!-- Batch Modal -->
 <div class="moverlay" id="batchModal">
   <div class="modal" style="width:700px">
     <div class="mtitle">批次輸入</div>
@@ -399,7 +397,6 @@ tbody tr:hover{background:var(--surface2);}
   </div>
 </div>
 
-<!-- CSV Modal -->
 <div class="moverlay" id="csvModal">
   <div class="modal" style="width:640px">
     <div class="mtitle">CSV 匯入</div>
@@ -417,7 +414,6 @@ tbody tr:hover{background:var(--surface2);}
   </div>
 </div>
 
-<!-- Watch Modal -->
 <div class="moverlay" id="watchModal">
   <div class="modal">
     <div class="mtitle">加入自選股</div>
@@ -429,7 +425,6 @@ tbody tr:hover{background:var(--surface2);}
   </div>
 </div>
 
-<!-- Cash Modal -->
 <div class="moverlay" id="cashModal">
   <div class="modal">
     <div class="mtitle">設定現金</div>
@@ -445,10 +440,14 @@ tbody tr:hover{background:var(--surface2);}
 const firebaseConfig={apiKey:"AIzaSyAmgfFdLpgAXe1nI-KaNXC9gGawGVK6hKM",authDomain:"stock-tracker-5e283.firebaseapp.com",projectId:"stock-tracker-5e283",storageBucket:"stock-tracker-5e283.firebasestorage.app",messagingSenderId:"459647271707",appId:"1:459647271707:web:1a7f7c232508d4e3a689be"};
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.firestore();
-const POLY='deMuTwmP4LD5oYnwY8b8GLlV1AVk49q2';
-const DELAY=1500; // ms between API requests to avoid 429
+const FINNHUB='d7v1m8hr01qp7l70miugd7v1m8hr01qp7l70miv0';
 
-let state={cash:0,trades:[],watchlist:[],prices:{},dividends:[],notes:{},targets:{},snapshots:[]};
+// ── Default empty state ──
+function defaultState(){
+  return {cash:0,trades:[],watchlist:[],prices:{},dividends:[],notes:{},targets:{},snapshots:[],lastPriceUpdate:''};
+}
+
+let state=defaultState();
 let holdings={};
 let currentUser=null,pieChart=null,lineChart=null;
 let chartMode='overall',lineRange='1M';
@@ -458,7 +457,6 @@ let sortDir='asc',csvParsed=[];
 const g=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const today=()=>new Date().toISOString().split('T')[0];
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 // ── Toast ──
 function showToast(msg,type='ok',ms=3500){
@@ -478,10 +476,13 @@ async function saveState(){
   await db.collection('users').doc(currentUser.uid).set(JSON.parse(JSON.stringify(state)));
 }
 async function loadState(){
+  // Always start fresh before loading
+  state=defaultState();
+  holdings={};
   const snap=await db.collection('users').doc(currentUser.uid).get();
   if(snap.exists){
     const d=snap.data();
-    state={cash:0,trades:[],watchlist:[],prices:{},dividends:[],notes:{},targets:{},snapshots:[],...d};
+    state={...defaultState(),...d};
     rebuildHoldings();
     if(d.prices)state.prices=d.prices;
   }
@@ -494,18 +495,30 @@ auth.onAuthStateChanged(async user=>{
     g('authScreen').style.display='none';
     g('appScreen').style.display='flex';
     g('userEmail').textContent=user.email;
+    // Load this user's data fresh
     await loadState();
-    await refreshPrices();
-    renderAll();
-  }else{
+    // Auto update prices once per day
+    const todayStr=today();
+    if(state.lastPriceUpdate!==todayStr){
+      await refreshPrices(false);
+    } else {
+      renderAll();
+      showToast('股價已是今日最新','ok',2000);
+    }
+  } else {
     currentUser=null;
+    // ── Clear all state on logout ──
+    state=defaultState();
+    holdings={};
+    expandedSym=null;
+    if(pieChart){pieChart.destroy();pieChart=null;}
+    if(lineChart){lineChart.destroy();lineChart=null;}
     g('authScreen').style.display='flex';
     g('appScreen').style.display='none';
   }
 });
 
 function authMsg(c){return{'auth/email-already-in-use':'此 Email 已被註冊','auth/invalid-email':'Email 格式錯誤','auth/weak-password':'密碼至少需要 6 個字元','auth/invalid-credential':'帳號或密碼錯誤'}[c]||'發生錯誤，請重試';}
-
 async function doLogin(){
   g('authError').textContent='';
   const persistence=g('rememberMe').checked?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION;
@@ -529,45 +542,54 @@ function toggleTheme(){
 // ── Sidebar ──
 function toggleSidebar(){g('sidebar').classList.toggle('open');}
 
-// ── Polygon with rate limit handling ──
+// ── Finnhub API ──
 async function fetchPrice(sym){
   try{
-    const r=await fetch(`https://api.polygon.io/v2/aggs/ticker/${sym}/prev?adjusted=true&apiKey=${POLY}`);
-    if(r.status===429) return null; // rate limited
+    const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${sym}&token=${FINNHUB}`);
     const d=await r.json();
-    if(d.results?.[0]?.c) return d.results[0].c;
+    // c = current price, if market closed use pc (prev close)
+    if(d.c&&d.c>0) return {price:d.c, change:d.d, changePct:d.dp};
+    if(d.pc&&d.pc>0) return {price:d.pc, change:0, changePct:0};
   }catch(e){}
   return null;
 }
 
-// ── Refresh with delay between requests + progress bar ──
-async function refreshPrices(){
+// ── Refresh prices ──
+async function refreshPrices(manual=true){
   const btn=g('refreshBtn');
   btn.disabled=true;
   btn.innerHTML='<span class="spin">↻</span> 更新中';
 
   const syms=[...new Set([...Object.keys(holdings),...state.watchlist])];
   if(syms.length===0){
-    btn.disabled=false;btn.innerHTML='↻ 更新';return;
+    btn.disabled=false;btn.innerHTML='↻ 更新';
+    if(manual)showToast('沒有股票需要更新','ok',2000);
+    renderAll();return;
   }
 
-  // Show progress
   const pw=g('progressWrap'),pf=g('progressFill'),pl=g('progressLabel');
   pw.style.display='block';pf.style.width='0%';
 
   let ok=0,fail=0;
+  // Finnhub allows 60 req/min, no delay needed
   for(let i=0;i<syms.length;i++){
     const s=syms[i];
     pl.textContent=`更新中 ${s}... (${i+1}/${syms.length})`;
     pf.style.width=`${((i)/syms.length)*100}%`;
-    const p=await fetchPrice(s);
-    if(p){state.prices[s]=p;ok++;}else fail++;
-    if(i<syms.length-1) await sleep(DELAY); // delay between requests
+    const result=await fetchPrice(s);
+    if(result){
+      state.prices[s]=result.price;
+      state.priceChanges=state.priceChanges||{};
+      state.priceChanges[s]={change:result.change,pct:result.changePct};
+      ok++;
+    }else{fail++;}
   }
 
   pf.style.width='100%';
   setTimeout(()=>{pw.style.display='none';},800);
 
+  // Mark today as updated
+  state.lastPriceUpdate=today();
   g('lastUpdate').textContent=new Date().toLocaleTimeString('zh-TW');
   btn.disabled=false;btn.innerHTML='↻ 更新';
 
@@ -661,7 +683,7 @@ function renderLine(){
   lineChart=new Chart(g('lineChart').getContext('2d'),{type:'line',data:{labels:filtered.map(s=>s.date),datasets:[{data:filtered.map(s=>s.value),borderColor:COLS[0],backgroundColor:COLS[0]+'33',fill:true,tension:.35,pointRadius:2,pointHoverRadius:5,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' $'+fmt(c.raw)}}},scales:{x:{ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:12}},grid:{color:'var(--border)'}},y:{ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:12},callback:v=>'$'+fmt(v)},grid:{color:'var(--border)'}}}}});
 }
 
-// ── Holdings ──
+// ── Holdings render ──
 function toggleSort(){sortDir=sortDir==='asc'?'desc':'asc';g('sortIcon').textContent=sortDir==='asc'?'↑':'↓';renderHoldings();}
 function renderHoldings(){
   const tbody=g('holdingsBody');
@@ -757,11 +779,16 @@ function openEditTrade(id){
 function renderWatchlist(){
   const grid=g('watchGrid');
   if(!state.watchlist.length){grid.innerHTML='<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted);font-family:var(--mono)">尚無自選股</div>';return;}
-  grid.innerHTML=state.watchlist.map(sym=>{const p=state.prices[sym];return`<div class="wcard"><button class="wrem" onclick="removeWatch('${sym}')">×</button><div class="wsym">${sym}</div><div class="wprice">${p?'$'+fmt(p):'—'}</div></div>`;}).join('');
+  grid.innerHTML=state.watchlist.map(sym=>{
+    const p=state.prices[sym];
+    const ch=state.priceChanges?.[sym];
+    const chStr=ch&&ch.pct!=null?`<div class="wchange ${ch.pct>=0?'pos':'neg'}">${ch.pct>=0?'+':''}${ch.pct?.toFixed(2)||'0.00'}%</div>`:'';
+    return `<div class="wcard"><button class="wrem" onclick="removeWatch('${sym}')">×</button><div class="wsym">${sym}</div><div class="wprice">${p?'$'+fmt(p):'—'}</div>${chStr}</div>`;
+  }).join('');
 }
 async function removeWatch(sym){state.watchlist=state.watchlist.filter(s=>s!==sym);await saveState();renderWatchlist();}
 
-// ── Export ──
+// ── Export / Template ──
 function exportCsv(){
   const rows=[['日期','交易類別','數量','代號','賬戶類別','價格']];
   for(const t of state.trades)rows.push([t.date,t.type==='buy'?'買進':t.type==='sell'?'賣出':'股息',t.type==='sell'?-t.shares:t.shares,t.symbol,'現金',t.price]);
@@ -820,11 +847,10 @@ async function importCsv(){
     state.trades.push({id:Date.now()+Math.random(),type:row.type,symbol:row.symbol,shares:row.shares,price:row.price,date:row.date,pnl:null});
     rebuildHoldings();added++;
   }
-  // Fetch prices with delay
+  // Fetch prices for new symbols
   const syms=[...new Set(csvParsed.map(r=>r.symbol))];
-  for(let i=0;i<syms.length;i++){
-    if(!state.prices[syms[i]]){const p=await fetchPrice(syms[i]);if(p)state.prices[syms[i]]=p;}
-    if(i<syms.length-1)await sleep(DELAY);
+  for(const s of syms){
+    if(!state.prices[s]){const result=await fetchPrice(s);if(result)state.prices[s]=result.price;}
   }
   await saveState();closeModal('csvModal');renderAll();
   showToast(`匯入 ${added} 筆${errs.length?`，${errs.length} 筆跳過`:''}`,errs.length?'warn':'ok');
@@ -856,10 +882,7 @@ async function submitBatch(){
     rebuildHoldings();added++;
   }
   const syms=[...new Set(rowData.map(r=>r.sym))];
-  for(let i=0;i<syms.length;i++){
-    if(!state.prices[syms[i]]){const p=await fetchPrice(syms[i]);if(p)state.prices[syms[i]]=p;}
-    if(i<syms.length-1)await sleep(DELAY);
-  }
+  for(const s of syms){if(!state.prices[s]){const result=await fetchPrice(s);if(result)state.prices[s]=result.price;}}
   await saveState();closeModal('batchModal');renderAll();
   showToast(`新增 ${added} 筆${errs.length?`，${errs.length} 筆跳過`:''}`,errs.length?'warn':'ok');
   if(errs.length)alert('跳過：\n'+errs.join('\n'));
@@ -886,14 +909,18 @@ async function submitTrade(){
     state.trades.push({id:Date.now(),type:tradeType,symbol:sym,shares,price,date,pnl:null});
   }
   rebuildHoldings();
-  if(!state.prices[sym]){const p=await fetchPrice(sym);if(p)state.prices[sym]=p;}
+  if(!state.prices[sym]){const result=await fetchPrice(sym);if(result)state.prices[sym]=result.price;}
   await saveState();closeModal('tradeModal');renderAll();
 }
 
 function openWatchModal(){g('wSym').value='';g('watchModal').classList.add('open');}
 async function submitWatch(){
   const sym=g('wSym').value.trim().toUpperCase();if(!sym)return;
-  if(!state.watchlist.includes(sym)){state.watchlist.push(sym);const p=await fetchPrice(sym);if(p)state.prices[sym]=p;await saveState();renderWatchlist();}
+  if(!state.watchlist.includes(sym)){
+    state.watchlist.push(sym);
+    const result=await fetchPrice(sym);if(result)state.prices[sym]=result.price;
+    await saveState();renderWatchlist();
+  }
   closeModal('watchModal');
 }
 function openCashModal(){g('cashInput').value=state.cash;g('cashModal').classList.add('open');}
