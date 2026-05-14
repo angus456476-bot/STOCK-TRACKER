@@ -65,7 +65,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:28
 .top-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
 
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px 26px;cursor:default;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px 26px;}
 .stat-card.clickable{cursor:pointer;transition:border-color .15s;}
 .stat-card.clickable:hover{border-color:var(--accent);}
 .stat-label{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
@@ -145,11 +145,10 @@ tbody tr:hover{background:var(--surface2);}
 .bs{background:rgba(255,77,77,.15);color:var(--neg);}
 .bd{background:rgba(59,130,246,.15);color:var(--accent);}
 
-/* Watchlist */
 .indices-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
 .index-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;}
-.index-name{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:6px;}
-.index-sym{font-family:var(--mono);font-size:15px;color:var(--muted);margin-bottom:8px;}
+.index-name{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:4px;}
+.index-sym{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:8px;}
 .index-price{font-family:var(--mono);font-size:26px;font-weight:500;margin-bottom:4px;}
 .index-change{font-family:var(--mono);font-size:16px;}
 
@@ -162,7 +161,6 @@ tbody tr:hover{background:var(--surface2);}
 .wprice{font-family:var(--mono);font-size:28px;font-weight:300;}
 .wchange{font-family:var(--mono);font-size:16px;margin-top:4px;}
 
-/* Compare */
 .compare-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:28px;margin-bottom:24px;}
 .compare-selects{display:flex;gap:16px;margin-bottom:20px;align-items:center;}
 .compare-vs{font-family:var(--mono);font-size:18px;color:var(--muted);}
@@ -172,7 +170,6 @@ tbody tr:hover{background:var(--surface2);}
 .compare-table tr:last-child td{border-bottom:none;}
 .compare-line-wrap{width:100%;height:220px;}
 
-/* Candle modal */
 .candle-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:center;justify-content:center;}
 .candle-overlay.open{display:flex;}
 .candle-modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;width:900px;max-width:96vw;max-height:90vh;overflow-y:auto;}
@@ -185,7 +182,7 @@ tbody tr:hover{background:var(--surface2);}
 .indicator-toggle{display:flex;gap:8px;flex-wrap:wrap;}
 .ind-btn{padding:6px 14px;font-family:var(--mono);font-size:15px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;transition:all .15s;}
 .ind-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.1);}
-.candle-close{background:none;border:none;color:var(--muted);font-size:28px;cursor:pointer;padding:0;}
+.candle-close{background:none;border:none;color:var(--muted);font-size:28px;cursor:pointer;}
 .candle-close:hover{color:var(--neg);}
 
 .progress-wrap{margin-bottom:16px;display:none;}
@@ -221,7 +218,6 @@ tbody tr:hover{background:var(--surface2);}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .factions{display:flex;gap:10px;justify-content:flex-end;margin-top:24px;}
 
-/* Capital modal */
 .capital-row{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
 .capital-row input{flex:1;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:18px;outline:none;}
 .capital-row input:focus{border-color:var(--accent);}
@@ -352,7 +348,7 @@ tbody tr:hover{background:var(--surface2);}
         <div class="stat-card"><div class="stat-label">總股票成本</div><div class="stat-value" id="hTotalCost">$0.00</div></div>
         <div class="stat-card"><div class="stat-label">股票市值</div><div class="stat-value" id="hTotalValue">$0.00</div></div>
         <div class="stat-card"><div class="stat-label">報酬</div><div class="stat-value" id="hReturn">$0.00</div></div>
-        <div class="stat-card" style="grid-column:span 1"><div class="stat-label">報酬率</div><div class="stat-value" id="hReturnRate">0.00%</div></div>
+        <div class="stat-card"><div class="stat-label">報酬率</div><div class="stat-value" id="hReturnRate">0.00%</div></div>
       </div>
       <div class="table-card"><div class="table-scroll">
         <table class="tbl-holdings">
@@ -399,18 +395,15 @@ tbody tr:hover{background:var(--surface2);}
           <button class="btn btn-p" onclick="openWatchModal()">＋ 加入</button>
         </div>
       </div>
-      <!-- Indices -->
       <div class="section-label" style="margin-bottom:12px">三大指數</div>
-      <div class="indices-row" id="indicesRow">
+      <div class="indices-row">
         <div class="index-card"><div class="index-name">S&amp;P 500</div><div class="index-sym">SPY</div><div class="index-price" id="idx-SPY">—</div><div class="index-change" id="idx-SPY-ch"></div></div>
         <div class="index-card"><div class="index-name">納斯達克</div><div class="index-sym">QQQ</div><div class="index-price" id="idx-QQQ">—</div><div class="index-change" id="idx-QQQ-ch"></div></div>
         <div class="index-card"><div class="index-name">道瓊</div><div class="index-sym">DIA</div><div class="index-price" id="idx-DIA">—</div><div class="index-change" id="idx-DIA-ch"></div></div>
       </div>
-      <!-- Watchlist cards -->
       <div class="section-label" style="margin-bottom:12px;margin-top:24px">自選股票</div>
       <div class="wgrid" id="watchGrid"><div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted);font-family:var(--mono)">尚無自選股</div></div>
-      <!-- Compare -->
-      <div class="compare-card" style="margin-top:24px">
+      <div class="compare-card">
         <div class="chart-header">
           <div class="section-label">股票對照</div>
           <div class="toggle-group">
@@ -435,10 +428,7 @@ tbody tr:hover{background:var(--surface2);}
 <div class="candle-overlay" id="candleOverlay">
   <div class="candle-modal">
     <div class="candle-header">
-      <div>
-        <div class="candle-sym" id="candleSym">—</div>
-        <div class="candle-price" id="candlePrice"></div>
-      </div>
+      <div><div class="candle-sym" id="candleSym">—</div><div class="candle-price" id="candlePrice"></div></div>
       <button class="candle-close" onclick="closeCandleModal()">✕</button>
     </div>
     <div class="candle-controls">
@@ -487,7 +477,7 @@ tbody tr:hover{background:var(--surface2);}
     <div class="mtitle">資金管理</div>
     <div class="fg">
       <label class="fl">起始資金 (USD)</label>
-      <input class="fi" id="capitalStart" type="number" min="0" step="any" placeholder="0.00">
+      <input class="fi" id="capitalStart" type="number" min="0" step="any" placeholder="0.00" oninput="updateCapitalTotal()">
     </div>
     <div class="fg">
       <label class="fl">添加資金記錄</label>
@@ -502,7 +492,7 @@ tbody tr:hover{background:var(--surface2);}
   </div>
 </div>
 
-<!-- Batch / CSV / Watch Modals -->
+<!-- Batch Modal -->
 <div class="moverlay" id="batchModal">
   <div class="modal" style="width:700px">
     <div class="mtitle">批次輸入</div>
@@ -517,6 +507,7 @@ tbody tr:hover{background:var(--surface2);}
   </div>
 </div>
 
+<!-- CSV Modal -->
 <div class="moverlay" id="csvModal">
   <div class="modal modal-wide">
     <div class="mtitle">CSV 匯入</div>
@@ -534,6 +525,7 @@ tbody tr:hover{background:var(--surface2);}
   </div>
 </div>
 
+<!-- Watch Modal -->
 <div class="moverlay" id="watchModal">
   <div class="modal">
     <div class="mtitle">加入自選股</div>
@@ -551,11 +543,10 @@ firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.firestore();
 const FINNHUB='d7v1m8hr01qp7l70miugd7v1m8hr01qp7l70miv0';
 const INDICES=['SPY','QQQ','DIA'];
-const US_HOLIDAYS=['2026-01-01','2026-01-19','2026-02-16','2026-04-03','2026-05-25','2026-06-19','2026-07-04','2026-09-07','2026-11-26','2026-12-25','2027-01-01','2027-01-18','2027-02-15','2027-04-02','2027-05-31','2027-06-19','2027-07-05','2027-09-06','2027-11-25','2027-12-24','2025-01-01','2025-01-20','2025-02-17','2025-04-18','2025-05-26','2025-06-19','2025-07-04','2025-09-01','2025-11-27','2025-12-25'];
+const US_HOLIDAYS=['2025-01-01','2025-01-20','2025-02-17','2025-04-18','2025-05-26','2025-06-19','2025-07-04','2025-09-01','2025-11-27','2025-12-25','2026-01-01','2026-01-19','2026-02-16','2026-04-03','2026-05-25','2026-06-19','2026-07-04','2026-09-07','2026-11-26','2026-12-25','2027-01-01','2027-01-18','2027-02-15','2027-04-02','2027-05-31','2027-06-19','2027-07-05','2027-09-06','2027-11-25','2027-12-24'];
 
-function defaultState(){
-  return {trades:[],watchlist:[],prices:{},priceChanges:{},dividends:[],notes:{},targets:{},snapshots:[],lastPriceUpdate:'',capitalStart:0,capitalAdds:[]};
-}
+function defaultState(){return{trades:[],watchlist:[],prices:{},priceChanges:{},notes:{},targets:{},snapshots:[],lastPriceUpdate:'',capitalStart:0,capitalAdds:[]};}
+
 let state=defaultState();
 let holdings={};
 let currentUser=null,pieChart=null,lineChart=null,compareChart=null,candleChartObj=null,volChartObj=null;
@@ -568,23 +559,50 @@ let activeIndicators=new Set();
 const g=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const today=()=>new Date().toISOString().split('T')[0];
-const isUSTradeDay=(d)=>{
-  const date=d||today();
-  const day=new Date(date).getUTCDay();
-  if(day===0||day===6)return false;
-  return !US_HOLIDAYS.includes(date);
-};
+const isUSTradeDay=(d)=>{const date=d||today();const day=new Date(date).getUTCDay();if(day===0||day===6)return false;return!US_HOLIDAYS.includes(date);};
 
-// ── Toast ──
 function showToast(msg,type='ok',ms=3500){const t=g('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.className='toast',ms);}
 function animateStat(id,val){const el=g(id);if(!el)return;el.classList.add('flash');setTimeout(()=>{el.textContent=val;el.classList.remove('flash');},300);}
 
-// ── Firebase ──
-async function saveState(){if(!currentUser)return;await db.collection('users').doc(currentUser.uid).set(JSON.parse(JSON.stringify(state)));}
+// ── SAFE saveState: only saves, never reads ──
+async function saveState(){
+  if(!currentUser)return;
+  try{
+    await db.collection('users').doc(currentUser.uid).set(JSON.parse(JSON.stringify(state)));
+  }catch(e){console.error('saveState failed:',e);}
+}
+
+// ── SAFE loadState: never overwrites existing data on failure ──
 async function loadState(){
-  state=defaultState();holdings={};
-  const snap=await db.collection('users').doc(currentUser.uid).get();
-  if(snap.exists){const d=snap.data();state={...defaultState(),...d};rebuildHoldings();if(d.prices)state.prices=d.prices;if(d.priceChanges)state.priceChanges=d.priceChanges;}
+  if(!currentUser)return false;
+  try{
+    const snap=await db.collection('users').doc(currentUser.uid).get();
+    if(snap.exists){
+      const d=snap.data();
+      // Only update state if we got valid data
+      if(d&&typeof d==='object'){
+        state=defaultState();
+        // Merge carefully, keeping defaults for missing fields
+        if(Array.isArray(d.trades))state.trades=d.trades;
+        if(Array.isArray(d.watchlist))state.watchlist=d.watchlist;
+        if(Array.isArray(d.snapshots))state.snapshots=d.snapshots;
+        if(Array.isArray(d.capitalAdds))state.capitalAdds=d.capitalAdds;
+        if(d.prices&&typeof d.prices==='object')state.prices=d.prices;
+        if(d.priceChanges&&typeof d.priceChanges==='object')state.priceChanges=d.priceChanges;
+        if(d.notes&&typeof d.notes==='object')state.notes=d.notes;
+        if(d.targets&&typeof d.targets==='object')state.targets=d.targets;
+        if(typeof d.capitalStart==='number')state.capitalStart=d.capitalStart;
+        if(typeof d.lastPriceUpdate==='string')state.lastPriceUpdate=d.lastPriceUpdate;
+        rebuildHoldings();
+        return true;
+      }
+    }
+    return false;
+  }catch(e){
+    console.error('loadState failed:',e);
+    showToast('資料載入失敗，請重新整理','warn',5000);
+    return false; // Do NOT save empty state on failure
+  }
 }
 
 // ── Auth ──
@@ -594,16 +612,28 @@ auth.onAuthStateChanged(async user=>{
     g('authScreen').style.display='none';
     g('appScreen').style.display='flex';
     g('userEmail').textContent=user.email;
-    await loadState();
+    // Reset in-memory state before loading
+    state=defaultState();holdings={};expandedSym=null;
+    const loaded=await loadState();
+    if(!loaded){
+      // New user or no data - safe to start fresh, but DON'T save yet
+      renderAll();
+      return;
+    }
     const todayStr=today();
     if(state.lastPriceUpdate!==todayStr&&isUSTradeDay(todayStr)){
       await refreshPrices(false);
-    }else{renderAll();if(state.lastPriceUpdate===todayStr)showToast('股價已是今日最新','ok',2000);}
+    }else{
+      renderAll();
+      if(state.lastPriceUpdate===todayStr)showToast('股價已是今日最新','ok',2000);
+    }
   }else{
-    currentUser=null;state=defaultState();holdings={};expandedSym=null;
-    [pieChart,lineChart,compareChart,candleChartObj,volChartObj].forEach(c=>{if(c)c.destroy();});
+    currentUser=null;
+    state=defaultState();holdings={};expandedSym=null;
+    [pieChart,lineChart,compareChart,candleChartObj,volChartObj].forEach(c=>{if(c){try{c.destroy();}catch(e){}}});
     pieChart=lineChart=compareChart=candleChartObj=volChartObj=null;
-    g('authScreen').style.display='flex';g('appScreen').style.display='none';
+    g('authScreen').style.display='flex';
+    g('appScreen').style.display='none';
   }
 });
 
@@ -615,12 +645,8 @@ function toggleTheme(){const l=document.documentElement.getAttribute('data-theme
 function toggleSidebar(){g('sidebar').classList.toggle('open');}
 
 // ── Finnhub ──
-async function fetchQuote(sym){
-  try{const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${sym}&token=${FINNHUB}`);const d=await r.json();if(d.c&&d.c>0)return{price:d.c,change:d.d,pct:d.dp};if(d.pc&&d.pc>0)return{price:d.pc,change:0,pct:0};}catch(e){}return null;
-}
-async function fetchCandles(sym,from,to){
-  try{const r=await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${sym}&resolution=D&from=${from}&to=${to}&token=${FINNHUB}`);const d=await r.json();if(d.s==='ok')return d;}catch(e){}return null;
-}
+async function fetchQuote(sym){try{const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${sym}&token=${FINNHUB}`);const d=await r.json();if(d.c&&d.c>0)return{price:d.c,change:d.d,pct:d.dp};if(d.pc&&d.pc>0)return{price:d.pc,change:0,pct:0};}catch(e){}return null;}
+async function fetchCandles(sym,from,to){try{const r=await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${sym}&resolution=D&from=${from}&to=${to}&token=${FINNHUB}`);const d=await r.json();if(d.s==='ok')return d;}catch(e){}return null;}
 
 // ── Refresh ──
 async function refreshPrices(manual=true){
@@ -676,43 +702,31 @@ function computeStats(){
   for(const[s,h]of Object.entries(holdings)){cost+=h.totalCost;value+=h.shares*(state.prices[s]||h.avgCost);}
   const ret=value-cost,rate=cost>0?(ret/cost)*100:0;
   const totalCapital=(state.capitalStart||0)+(state.capitalAdds||[]).reduce((a,b)=>a+(parseFloat(b.amount)||0),0);
-  const cash=totalCapital+state.trades.filter(t=>t.type==='sell').reduce((a,t)=>a+t.shares*t.price,0)-state.trades.filter(t=>t.type==='buy').reduce((a,t)=>a+t.shares*t.price,0);
-  const totalFunds=value+Math.max(0,cash);
+  const sellTotal=state.trades.filter(t=>t.type==='sell').reduce((a,t)=>a+t.shares*t.price,0);
+  const buyTotal=state.trades.filter(t=>t.type==='buy').reduce((a,t)=>a+t.shares*t.price,0);
+  const cash=Math.max(0,totalCapital+sellTotal-buyTotal);
+  const totalFunds=value+cash;
   const totalReturn=totalFunds-totalCapital;
   const totalReturnRate=totalCapital>0?(totalReturn/totalCapital)*100:0;
-  return{cost,value,ret,rate,totalCapital,cash:Math.max(0,cash),totalFunds,totalReturn,totalReturnRate};
+  return{cost,value,ret,rate,totalCapital,cash,totalFunds,totalReturn,totalReturnRate};
 }
 
 function renderAll(){renderDashboard();renderHoldings();renderHistory();renderWatchlist();updateCompareSelects();}
 
-// ── Dashboard ──
 function renderDashboard(){
   const{cost,value,ret,rate,totalCapital,cash,totalFunds,totalReturn,totalReturnRate}=computeStats();
-  animateStat('totalFunds','$'+fmt(totalFunds));
-  animateStat('totalCost','$'+fmt(cost));
-  animateStat('cashCard','$'+fmt(cash));
-  animateStat('capitalCard','$'+fmt(totalCapital));
-  animateStat('totalReturn',(totalReturn>=0?'+$':'-$')+fmt(Math.abs(totalReturn)));
-  animateStat('returnRate',(totalReturnRate>=0?'+':'')+totalReturnRate.toFixed(2)+'%');
+  animateStat('totalFunds','$'+fmt(totalFunds));animateStat('totalCost','$'+fmt(cost));animateStat('cashCard','$'+fmt(cash));
+  animateStat('capitalCard','$'+fmt(totalCapital));animateStat('totalReturn',(totalReturn>=0?'+$':'-$')+fmt(Math.abs(totalReturn)));animateStat('returnRate',(totalReturnRate>=0?'+':'')+totalReturnRate.toFixed(2)+'%');
+  animateStat('hTotalCost','$'+fmt(cost));animateStat('hTotalValue','$'+fmt(value));animateStat('hReturn',(ret>=0?'+$':'-$')+fmt(Math.abs(ret)));animateStat('hReturnRate',(rate>=0?'+':'')+rate.toFixed(2)+'%');
   setTimeout(()=>{
-    g('totalReturn').className='stat-value '+(totalReturn>=0?'pos':'neg');
-    g('returnRate').className='stat-value '+(totalReturnRate>=0?'pos':'neg');
-  },310);
-  // Holdings stats
-  animateStat('hTotalCost','$'+fmt(cost));
-  animateStat('hTotalValue','$'+fmt(value));
-  animateStat('hReturn',(ret>=0?'+$':'-$')+fmt(Math.abs(ret)));
-  animateStat('hReturnRate',(rate>=0?'+':'')+rate.toFixed(2)+'%');
-  setTimeout(()=>{
-    if(g('hReturn'))g('hReturn').className='stat-value '+(ret>=0?'pos':'neg');
-    if(g('hReturnRate'))g('hReturnRate').className='stat-value '+(rate>=0?'pos':'neg');
+    g('totalReturn').className='stat-value '+(totalReturn>=0?'pos':'neg');g('returnRate').className='stat-value '+(totalReturnRate>=0?'pos':'neg');
+    if(g('hReturn'))g('hReturn').className='stat-value '+(ret>=0?'pos':'neg');if(g('hReturnRate'))g('hReturnRate').className='stat-value '+(rate>=0?'pos':'neg');
   },310);
   renderPie(value,cash);renderLine();
 }
 
-// ── Pie ──
 const COLS=['#3b82f6','#00e5ff','#ff6b35','#a78bfa','#34d399','#f472b6','#fbbf24','#60a5fa','#fb923c','#818cf8'];
-function setChartMode(m){chartMode=m;g('togO').classList.toggle('active',m==='overall');g('togD').classList.toggle('active',m==='detail');renderPie(computeStats().value,computeStats().cash);}
+function setChartMode(m){chartMode=m;g('togO').classList.toggle('active',m==='overall');g('togD').classList.toggle('active',m==='detail');const s=computeStats();renderPie(s.value,s.cash);}
 function renderPie(totalValue,cash){
   const labels=[],values=[],colors=[];
   if(cash>0){labels.push('現金');values.push(cash);colors.push('#444');}
@@ -720,12 +734,10 @@ function renderPie(totalValue,cash){
   else{let ci=0;for(const[s,h]of Object.entries(holdings)){const v=h.shares*(state.prices[s]||h.avgCost);if(v>0){labels.push(s);values.push(v);colors.push(COLS[ci++%COLS.length]);}}}
   const total=values.reduce((a,b)=>a+b,0);
   g('pieLegend').innerHTML=labels.length?labels.map((l,i)=>`<div class="leg-row"><div class="leg-left"><span class="ldot" style="background:${colors[i]}"></span><span class="lname">${l}</span></div><span class="lpct">${total>0?((values[i]/total)*100).toFixed(1):0}%</span><span class="lval">$${fmt(values[i])}</span></div>`).join(''):'<div style="color:var(--muted);font-family:var(--mono);font-size:18px;padding:20px">尚無資料</div>';
-  if(pieChart)pieChart.destroy();
-  if(!values.length)return;
+  if(pieChart)pieChart.destroy();if(!values.length)return;
   pieChart=new Chart(g('pieChart').getContext('2d'),{type:'doughnut',data:{labels,datasets:[{data:values,backgroundColor:colors,borderWidth:3,borderColor:'var(--surface)'}]},options:{cutout:'66%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` $${fmt(c.raw)} (${total>0?((c.raw/total)*100).toFixed(1):0}%)`}}},animation:{duration:500}}});
 }
 
-// ── Line ──
 function setLineRange(r){lineRange=r;['togM1','togM6','togY1'].forEach((id,i)=>g(id).classList.toggle('active',['1M','6M','1Y'][i]===r));renderLine();}
 function renderLine(){
   if(!state.snapshots||!state.snapshots.length){if(lineChart){lineChart.destroy();lineChart=null;}return;}
@@ -737,18 +749,14 @@ function renderLine(){
   lineChart=new Chart(g('lineChart').getContext('2d'),{type:'line',data:{labels:filtered.map(s=>s.date),datasets:[{data:filtered.map(s=>s.value),borderColor:COLS[0],backgroundColor:COLS[0]+'33',fill:true,tension:.35,pointRadius:2,pointHoverRadius:5,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' $'+fmt(c.raw)}}},scales:{x:{ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:12}},grid:{color:'var(--border)'}},y:{ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:12},callback:v=>'$'+fmt(v)},grid:{color:'var(--border)'}}}}});
 }
 
-// ── Holdings ──
 function toggleSort(){sortDir=sortDir==='asc'?'desc':'asc';g('sortIcon').textContent=sortDir==='asc'?'↑':'↓';renderHoldings();}
 function renderHoldings(){
-  const tbody=g('holdingsBody');
-  let entries=Object.entries(holdings);
+  const tbody=g('holdingsBody');let entries=Object.entries(holdings);
   if(!entries.length){tbody.innerHTML=`<tr><td colspan="8" style="padding:0;border:none"><div class="empty-state"><div class="empty-icon">◈</div><div class="empty-text">尚無持倉紀錄</div><button class="empty-cta" onclick="openTradeModal()">＋ 新增第一筆交易</button></div></td></tr>`;return;}
   entries.sort((a,b)=>sortDir==='asc'?a[0].localeCompare(b[0]):b[0].localeCompare(a[0]));
   let html='';
   for(const[sym,h]of entries){
-    const price=state.prices[sym]||h.avgCost,val=h.shares*price;
-    const ret=val-h.totalCost,rate=h.totalCost>0?(ret/h.totalCost)*100:0;
-    const isExp=expandedSym===sym;
+    const price=state.prices[sym]||h.avgCost,val=h.shares*price,ret=val-h.totalCost,rate=h.totalCost>0?(ret/h.totalCost)*100:0,isExp=expandedSym===sym;
     html+=`<tr><td class="sym" onclick="toggleExpand('${sym}')">${isExp?'▼':'▶'} ${sym}</td>
       <td class="${rate>=0?'pos':'neg'}">${rate>=0?'+':''}${rate.toFixed(2)}%</td>
       <td class="${ret>=0?'pos':'neg'}">${ret>=0?'+$':'-$'}${fmt(Math.abs(ret))}</td>
@@ -774,13 +782,11 @@ function renderHoldings(){
 function toggleExpand(sym){expandedSym=expandedSym===sym?null:sym;renderHoldings();}
 async function saveExpand(sym){if(!state.notes)state.notes={};if(!state.targets)state.targets={};state.notes[sym]=g(`note-${sym}`).value;state.targets[sym]={buy:g(`tgt-buy-${sym}`).value,sell:g(`tgt-sell-${sym}`).value};await saveState();showToast('備註已儲存','ok',2000);}
 
-// ── History ──
 function renderHistory(){
   const syms=[...new Set(state.trades.map(t=>t.symbol))];
   const sel=g('histFilter'),cur=sel.value||'ALL';
   sel.innerHTML='<option value="ALL">全部</option>'+syms.map(s=>`<option value="${s}"${s===cur?' selected':''}>${s}</option>`).join('');
-  let trades=[...state.trades].reverse();
-  if(cur!=='ALL')trades=trades.filter(t=>t.symbol===cur);
+  let trades=[...state.trades].reverse();if(cur!=='ALL')trades=trades.filter(t=>t.symbol===cur);
   const tbody=g('historyBody');
   if(!trades.length){tbody.innerHTML=`<tr><td colspan="8" style="padding:0;border:none"><div class="empty-state"><div class="empty-icon">≡</div><div class="empty-text">尚無交易紀錄</div><button class="empty-cta" onclick="openTradeModal()">＋ 新增第一筆交易</button></div></td></tr>`;return;}
   tbody.innerHTML=trades.map(t=>{
@@ -798,8 +804,7 @@ async function deleteTrade(id){
   const t=state.trades.find(t=>t.id===id);if(!t)return;
   const tl=t.type==='buy'?'買入':t.type==='sell'?'賣出':'配息';
   if(!confirm(`確定刪除此筆紀錄？\n\n${t.date}　${t.symbol}　${tl}\n${t.shares}股 @ $${fmt(t.price)}`))return;
-  state.trades=state.trades.filter(t=>t.id!==id);
-  rebuildHoldings();await saveState();renderAll();showToast('已刪除','warn',2000);
+  state.trades=state.trades.filter(t=>t.id!==id);rebuildHoldings();await saveState();renderAll();showToast('已刪除','warn',2000);
 }
 function openEditTrade(id){
   const t=state.trades.find(t=>t.id===id);if(!t)return;
@@ -809,50 +814,33 @@ function openEditTrade(id){
   g('tradeModal').classList.add('open');
 }
 
-// ── Watchlist ──
 function renderWatchlist(){
-  // Indices
   INDICES.forEach(sym=>{
     const p=state.prices[sym],ch=state.priceChanges[sym];
     if(g(`idx-${sym}`))g(`idx-${sym}`).textContent=p?'$'+fmt(p):'—';
     if(g(`idx-${sym}-ch`)&&ch){const el=g(`idx-${sym}-ch`);el.textContent=(ch.pct>=0?'+':'')+ch.pct?.toFixed(2)+'%';el.className=`index-change ${ch.pct>=0?'pos':'neg'}`;}
   });
-  // Watchlist cards
   const grid=g('watchGrid');
   if(!state.watchlist.length){grid.innerHTML='<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted);font-family:var(--mono)">尚無自選股</div>';return;}
   grid.innerHTML=state.watchlist.map(sym=>{
     const p=state.prices[sym],ch=state.priceChanges[sym];
     const chStr=ch&&ch.pct!=null?`<div class="wchange ${ch.pct>=0?'pos':'neg'}">${ch.pct>=0?'+':''}${ch.pct?.toFixed(2)||'0.00'}%</div>`:'';
-    return `<div class="wcard" onclick="openCandleModal('${sym}')">
-      <button class="wrem" onclick="event.stopPropagation();removeWatch('${sym}')">×</button>
-      <div class="wsym">${sym}</div>
-      <div class="wprice">${p?'$'+fmt(p):'—'}</div>${chStr}</div>`;
+    return `<div class="wcard" onclick="openCandleModal('${sym}')"><button class="wrem" onclick="event.stopPropagation();removeWatch('${sym}')">×</button><div class="wsym">${sym}</div><div class="wprice">${p?'$'+fmt(p):'—'}</div>${chStr}</div>`;
   }).join('');
-  // Compare selects
   updateCompareSelects();
 }
 async function removeWatch(sym){state.watchlist=state.watchlist.filter(s=>s!==sym);await saveState();renderWatchlist();}
 
-// ── Compare ──
 function updateCompareSelects(){
   const allSyms=[...new Set([...Object.keys(holdings),...state.watchlist,...INDICES])];
-  [g('cmpSym1'),g('cmpSym2')].forEach((sel,idx)=>{
-    if(!sel)return;
-    const cur=sel.value;
-    sel.innerHTML='<option value="">選擇股票 '+(idx===0?'A':'B')+'</option>'+allSyms.map(s=>`<option value="${s}"${s===cur?' selected':''}>${s}</option>`).join('');
-  });
+  [g('cmpSym1'),g('cmpSym2')].forEach((sel,idx)=>{if(!sel)return;const cur=sel.value;sel.innerHTML='<option value="">選擇股票 '+(idx===0?'A':'B')+'</option>'+allSyms.map(s=>`<option value="${s}"${s===cur?' selected':''}>${s}</option>`).join('');});
 }
 function setCmpRange(r){cmpRange=r;['cmpM1','cmpM6','cmpY1'].forEach((id,i)=>g(id).classList.toggle('active',['1M','6M','1Y'][i]===r));renderCompare();}
-
 async function renderCompare(){
   const s1=g('cmpSym1')?.value,s2=g('cmpSym2')?.value;
   const tbl=g('compareTable');
   if(!s1||!s2){tbl.innerHTML='<tr><td colspan="3" style="color:var(--muted);font-family:var(--mono);font-size:17px;padding:20px">請選擇兩支股票</td></tr>';if(compareChart){compareChart.destroy();compareChart=null;}return;}
-
-  const h1=holdings[s1],h2=holdings[s2];
-  const p1=state.prices[s1],p2=state.prices[s2];
-  const ch1=state.priceChanges[s1],ch2=state.priceChanges[s2];
-
+  const h1=holdings[s1],h2=holdings[s2],p1=state.prices[s1],p2=state.prices[s2],ch1=state.priceChanges[s1],ch2=state.priceChanges[s2];
   const row=(label,v1,v2)=>`<tr><th>${label}</th><td>${v1}</td><td>${v2}</td></tr>`;
   tbl.innerHTML=`<thead><tr><th></th><th style="color:${COLS[0]}">${s1}</th><th style="color:${COLS[1]}">${s2}</th></tr></thead><tbody>
     ${row('現價',p1?'$'+fmt(p1):'—',p2?'$'+fmt(p2):'—')}
@@ -862,45 +850,34 @@ async function renderCompare(){
     ${row('市值',h1&&p1?'$'+fmt(h1.shares*p1):'—',h2&&p2?'$'+fmt(h2.shares*p2):'—')}
     ${row('報酬率',h1&&p1?((h1.shares*p1-h1.totalCost)/h1.totalCost*100).toFixed(2)+'%':'—',h2&&p2?((h2.shares*p2-h2.totalCost)/h2.totalCost*100).toFixed(2)+'%':'—')}
   </tbody>`;
-
-  // Fetch candle data for both
   const days={'1M':30,'6M':180,'1Y':365}[cmpRange]||30;
   const from=Math.floor((Date.now()-days*864e5)/1000),to=Math.floor(Date.now()/1000);
-  const [d1,d2]=await Promise.all([fetchCandles(s1,from,to),fetchCandles(s2,from,to)]);
-
-  if(compareChart)compareChart.destroy();
-  if(!d1&&!d2)return;
-
-  const norm=(arr)=>{if(!arr||!arr.length)return [];const base=arr[0];return arr.map(v=>((v-base)/base)*100);};
+  const[d1,d2]=await Promise.all([fetchCandles(s1,from,to),fetchCandles(s2,from,to)]);
+  if(compareChart)compareChart.destroy();if(!d1&&!d2)return;
   const datasets=[];
   if(d1)datasets.push({label:s1,data:d1.t.map((t,i)=>({x:t*1000,y:d1.c[i]})),borderColor:COLS[0],backgroundColor:'transparent',tension:.3,pointRadius:0,borderWidth:2});
   if(d2)datasets.push({label:s2,data:d2.t.map((t,i)=>({x:t*1000,y:d2.c[i]})),borderColor:COLS[1],backgroundColor:'transparent',tension:.3,pointRadius:0,borderWidth:2});
-
   compareChart=new Chart(g('compareChart').getContext('2d'),{type:'line',data:{datasets},options:{responsive:true,maintainAspectRatio:false,parsing:false,plugins:{legend:{display:true,labels:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:13}}}},scales:{x:{type:'time',time:{unit:'day'},ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:11}},grid:{color:'var(--border)'}},y:{ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:11},callback:v=>'$'+fmt(v)},grid:{color:'var(--border)'}}}}});
 }
 
-// ── Candle Modal ──
 async function openCandleModal(sym){
   candleSym=sym;activeIndicators=new Set();
   g('candleSym').textContent=sym;
   const p=state.prices[sym],ch=state.priceChanges[sym];
-  g('candlePrice').textContent=p?`$${fmt(p)} ${ch?(ch.pct>=0?'+':'')+ch.pct?.toFixed(2)+'%':''}` :'';
-  // Reset indicator buttons
-  ['ema50','ema200','bb','vol'].forEach(id=>{g('ind-'+id).classList.remove('active');});
+  g('candlePrice').textContent=p?`$${fmt(p)} ${ch?(ch.pct>=0?'+':'')+ch.pct?.toFixed(2)+'%':'`:''}` :'';
+  ['ema50','ema200','bb','vol'].forEach(id=>g('ind-'+id).classList.remove('active'));
   g('volWrap').style.display='none';
   g('candleOverlay').classList.add('open');
   await loadCandleChart();
 }
 function closeCandleModal(){g('candleOverlay').classList.remove('open');if(candleChartObj){candleChartObj.destroy();candleChartObj=null;}if(volChartObj){volChartObj.destroy();volChartObj=null;}}
 function setCandleRange(r){candleRange=r;['kM1','kM3','kM6','kY1'].forEach((id,i)=>g(id).classList.toggle('active',['1M','3M','6M','1Y'][i]===r));loadCandleChart();}
-
 function toggleIndicator(ind){
   if(activeIndicators.has(ind))activeIndicators.delete(ind);else activeIndicators.add(ind);
   g('ind-'+ind).classList.toggle('active',activeIndicators.has(ind));
   if(ind==='vol')g('volWrap').style.display=activeIndicators.has('vol')?'block':'none';
   if(candleData.length)drawCandle(candleData);
 }
-
 async function loadCandleChart(){
   const days={'1M':30,'3M':90,'6M':180,'1Y':365}[candleRange]||30;
   const from=Math.floor((Date.now()-days*864e5)/1000),to=Math.floor(Date.now()/1000);
@@ -909,76 +886,26 @@ async function loadCandleChart(){
   candleData=d.t.map((t,i)=>({t:t*1000,o:d.o[i],h:d.h[i],l:d.l[i],c:d.c[i],v:d.v[i]}));
   drawCandle(candleData);
 }
-
-function calcEMA(data,period){
-  const k=2/(period+1);const ema=[];let prev=null;
-  for(let i=0;i<data.length;i++){
-    if(i<period-1){ema.push(null);continue;}
-    if(i===period-1){const slice=data.slice(0,period);prev=slice.reduce((a,b)=>a+b,0)/period;ema.push(prev);continue;}
-    prev=data[i]*k+prev*(1-k);ema.push(prev);
-  }return ema;
-}
-function calcBB(closes,period=20,mult=2){
-  const upper=[],lower=[],mid=[];
-  for(let i=0;i<closes.length;i++){
-    if(i<period-1){upper.push(null);lower.push(null);mid.push(null);continue;}
-    const slice=closes.slice(i-period+1,i+1);
-    const m=slice.reduce((a,b)=>a+b,0)/period;
-    const sd=Math.sqrt(slice.reduce((a,b)=>a+(b-m)**2,0)/period);
-    mid.push(m);upper.push(m+mult*sd);lower.push(m-mult*sd);
-  }return{upper,lower,mid};
-}
-
+function calcEMA(data,period){const k=2/(period+1);const ema=[];let prev=null;for(let i=0;i<data.length;i++){if(i<period-1){ema.push(null);continue;}if(i===period-1){const s=data.slice(0,period);prev=s.reduce((a,b)=>a+b,0)/period;ema.push(prev);continue;}prev=data[i]*k+prev*(1-k);ema.push(prev);}return ema;}
+function calcBB(closes,period=20,mult=2){const upper=[],lower=[],mid=[];for(let i=0;i<closes.length;i++){if(i<period-1){upper.push(null);lower.push(null);mid.push(null);continue;}const s=closes.slice(i-period+1,i+1);const m=s.reduce((a,b)=>a+b,0)/period;const sd=Math.sqrt(s.reduce((a,b)=>a+(b-m)**2,0)/period);mid.push(m);upper.push(m+mult*sd);lower.push(m-mult*sd);}return{upper,lower,mid};}
 function drawCandle(data){
-  if(candleChartObj){candleChartObj.destroy();candleChartObj=null;}
-  if(volChartObj){volChartObj.destroy();volChartObj=null;}
-
-  const labels=data.map(d=>d.t);
-  const closes=data.map(d=>d.c);
-  const datasets=[{
-    label:candleSym,type:'candlestick',
-    data:data.map(d=>({x:d.t,o:d.o,h:d.h,l:d.l,c:d.c})),
-    color:{up:getComputedStyle(document.documentElement).getPropertyValue('--pos').trim()||'#39d98a',down:getComputedStyle(document.documentElement).getPropertyValue('--neg').trim()||'#ff4d4d',unchanged:'#888'}
-  }];
-
-  if(activeIndicators.has('ema50')){
-    const ema=calcEMA(closes,50);
-    datasets.push({label:'EMA50',type:'line',data:labels.map((t,i)=>({x:t,y:ema[i]})),borderColor:'#f97316',borderWidth:1.5,pointRadius:0,backgroundColor:'transparent'});
-  }
-  if(activeIndicators.has('ema200')){
-    const ema=calcEMA(closes,200);
-    datasets.push({label:'EMA200',type:'line',data:labels.map((t,i)=>({x:t,y:ema[i]})),borderColor:'#a78bfa',borderWidth:1.5,pointRadius:0,backgroundColor:'transparent'});
-  }
-  if(activeIndicators.has('bb')){
-    const bb=calcBB(closes);
-    datasets.push({label:'BB上軌',type:'line',data:labels.map((t,i)=>({x:t,y:bb.upper[i]})),borderColor:'rgba(59,130,246,.6)',borderWidth:1,pointRadius:0,backgroundColor:'transparent',borderDash:[4,4]});
-    datasets.push({label:'BB中軌',type:'line',data:labels.map((t,i)=>({x:t,y:bb.mid[i]})),borderColor:'rgba(59,130,246,.4)',borderWidth:1,pointRadius:0,backgroundColor:'transparent'});
-    datasets.push({label:'BB下軌',type:'line',data:labels.map((t,i)=>({x:t,y:bb.lower[i]})),borderColor:'rgba(59,130,246,.6)',borderWidth:1,pointRadius:0,backgroundColor:'transparent',borderDash:[4,4]});
-  }
-
-  candleChartObj=new Chart(g('candleChart').getContext('2d'),{
-    type:'candlestick',data:{datasets},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:activeIndicators.size>0,labels:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:12},filter:i=>i.text!==candleSym}}},scales:{x:{type:'time',time:{unit:'day'},ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:11}},grid:{color:'var(--border)'}},y:{ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:11},callback:v=>'$'+fmt(v)},grid:{color:'var(--border)'}}}}
-  });
-
-  if(activeIndicators.has('vol')){
-    const posColor=getComputedStyle(document.documentElement).getPropertyValue('--pos').trim();
-    const negColor=getComputedStyle(document.documentElement).getPropertyValue('--neg').trim();
-    volChartObj=new Chart(g('volChart').getContext('2d'),{
-      type:'bar',
-      data:{labels:data.map(d=>d.t),datasets:[{data:data.map(d=>d.v),backgroundColor:data.map((d,i)=>d.c>=d.o?posColor+'88':negColor+'88'),borderWidth:0}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{type:'time',time:{unit:'day'},ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:10}},grid:{display:false}},y:{ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:10},callback:v=>v>=1e6?(v/1e6).toFixed(0)+'M':v},grid:{color:'var(--border)'}}}}
-    });
-  }
+  if(candleChartObj){candleChartObj.destroy();candleChartObj=null;}if(volChartObj){volChartObj.destroy();volChartObj=null;}
+  const labels=data.map(d=>d.t),closes=data.map(d=>d.c);
+  const posC=getComputedStyle(document.documentElement).getPropertyValue('--pos').trim()||'#39d98a';
+  const negC=getComputedStyle(document.documentElement).getPropertyValue('--neg').trim()||'#ff4d4d';
+  const datasets=[{label:candleSym,type:'candlestick',data:data.map(d=>({x:d.t,o:d.o,h:d.h,l:d.l,c:d.c})),color:{up:posC,down:negC,unchanged:'#888'}}];
+  if(activeIndicators.has('ema50')){const ema=calcEMA(closes,50);datasets.push({label:'EMA50',type:'line',data:labels.map((t,i)=>({x:t,y:ema[i]})),borderColor:'#f97316',borderWidth:1.5,pointRadius:0,backgroundColor:'transparent'});}
+  if(activeIndicators.has('ema200')){const ema=calcEMA(closes,200);datasets.push({label:'EMA200',type:'line',data:labels.map((t,i)=>({x:t,y:ema[i]})),borderColor:'#a78bfa',borderWidth:1.5,pointRadius:0,backgroundColor:'transparent'});}
+  if(activeIndicators.has('bb')){const bb=calcBB(closes);datasets.push({label:'BB上軌',type:'line',data:labels.map((t,i)=>({x:t,y:bb.upper[i]})),borderColor:'rgba(59,130,246,.6)',borderWidth:1,pointRadius:0,backgroundColor:'transparent',borderDash:[4,4]},{label:'BB中軌',type:'line',data:labels.map((t,i)=>({x:t,y:bb.mid[i]})),borderColor:'rgba(59,130,246,.4)',borderWidth:1,pointRadius:0,backgroundColor:'transparent'},{label:'BB下軌',type:'line',data:labels.map((t,i)=>({x:t,y:bb.lower[i]})),borderColor:'rgba(59,130,246,.6)',borderWidth:1,pointRadius:0,backgroundColor:'transparent',borderDash:[4,4]});}
+  candleChartObj=new Chart(g('candleChart').getContext('2d'),{type:'candlestick',data:{datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:activeIndicators.size>0,labels:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:12},filter:i=>i.text!==candleSym}}},scales:{x:{type:'time',time:{unit:'day'},ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:11}},grid:{color:'var(--border)'}},y:{ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:11},callback:v=>'$'+fmt(v)},grid:{color:'var(--border)'}}}}});
+  if(activeIndicators.has('vol')){volChartObj=new Chart(g('volChart').getContext('2d'),{type:'bar',data:{labels:data.map(d=>d.t),datasets:[{data:data.map(d=>d.v),backgroundColor:data.map(d=>d.c>=d.o?posC+'88':negC+'88'),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{type:'time',time:{unit:'day'},ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:10}},grid:{display:false}},y:{ticks:{color:'var(--muted)',font:{family:'IBM Plex Mono',size:10},callback:v=>v>=1e6?(v/1e6).toFixed(0)+'M':v},grid:{color:'var(--border)'}}}}});}
 }
 
-// ── Capital Modal ──
 function openCapitalModal(){
   g('capitalStart').value=state.capitalStart||0;
   const rows=g('capitalAddRows');rows.innerHTML='';
   (state.capitalAdds||[]).forEach(a=>addCapitalRowWith(a.date,a.amount));
-  updateCapitalTotal();
-  g('capitalModal').classList.add('open');
+  updateCapitalTotal();g('capitalModal').classList.add('open');
 }
 function addCapitalRow(){addCapitalRowWith(today(),'');}
 function addCapitalRowWith(date,amount){
@@ -997,7 +924,6 @@ async function saveCapital(){
   await saveState();closeModal('capitalModal');renderDashboard();showToast('資金已儲存','ok',2000);
 }
 
-// ── Trade / Watch / CSV / Batch ──
 function openTradeModal(){editingId=null;tradeType='buy';g('tradeMTitle').textContent='新增交易';g('typeBuy').classList.add('active');g('typeSell').classList.remove('active');g('tSym').value='';g('tShares').value='';g('tPrice').value='';g('tDate').value=today();g('tradeModal').classList.add('open');}
 function setTType(t){tradeType=t;g('typeBuy').classList.toggle('active',t==='buy');g('typeSell').classList.toggle('active',t==='sell');}
 async function submitTrade(){
@@ -1010,11 +936,7 @@ async function submitTrade(){
 }
 
 function openWatchModal(){g('wSym').value='';g('watchModal').classList.add('open');}
-async function submitWatch(){
-  const sym=g('wSym').value.trim().toUpperCase();if(!sym)return;
-  if(!state.watchlist.includes(sym)){state.watchlist.push(sym);const r=await fetchQuote(sym);if(r)state.prices[sym]=r.price;await saveState();renderWatchlist();}
-  closeModal('watchModal');
-}
+async function submitWatch(){const sym=g('wSym').value.trim().toUpperCase();if(!sym)return;if(!state.watchlist.includes(sym)){state.watchlist.push(sym);const r=await fetchQuote(sym);if(r)state.prices[sym]=r.price;await saveState();renderWatchlist();}closeModal('watchModal');}
 
 function exportCsv(){const rows=[['日期','交易類別','數量','代號','賬戶類別','價格']];for(const t of state.trades)rows.push([t.date,t.type==='buy'?'買進':t.type==='sell'?'賣出':'股息',t.type==='sell'?-t.shares:t.shares,t.symbol,'現金',t.price]);const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.map(r=>r.join(',')).join('\n'));a.download='stock-tracker-export.csv';a.click();}
 function downloadTemplate(){const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent('日期,交易類別,數量,代號,賬戶類別,價格\n2026/1/1,買進,10,AAPL,現金,150.00\n2026/3/1,賣出,-5,AAPL,現金,180.00');a.download='stock-tracker-template.csv';a.click();}
@@ -1063,8 +985,7 @@ function addBatchRow(){const tr=document.createElement('tr');tr.innerHTML=`<td><
 async function submitBatch(){
   const rows=g('batchBody').querySelectorAll('tr');const rowData=[];
   for(const row of rows){const cells=row.querySelectorAll('select,input');const type=cells[0].value,sym=cells[1].value.trim().toUpperCase(),shares=parseFloat(cells[2].value),price=parseFloat(cells[3].value),date=cells[4].value;if(!sym||isNaN(shares)||isNaN(price)||!date)continue;rowData.push({type,sym,shares,price,date});}
-  rowData.sort((a,b)=>a.date.localeCompare(b.date));
-  let added=0,errs=[];
+  rowData.sort((a,b)=>a.date.localeCompare(b.date));let added=0,errs=[];
   for(const rd of rowData){if(rd.type==='sell'){const h=holdings[rd.sym];if(!h||h.shares<rd.shares){errs.push(`${rd.sym} 賣出超過持有量`);continue;}}state.trades.push({id:Date.now()+Math.random(),type:rd.type,symbol:rd.sym,shares:rd.shares,price:rd.price,date:rd.date,pnl:null});rebuildHoldings();added++;}
   const syms=[...new Set(rowData.map(r=>r.sym))];for(const s of syms){if(!state.prices[s]){const r=await fetchQuote(s);if(r)state.prices[s]=r.price;}}
   await saveState();closeModal('batchModal');renderAll();
@@ -1075,7 +996,6 @@ async function submitBatch(){
 function closeModal(id){g(id).classList.remove('open');}
 function navigate(page,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));g('page-'+page).classList.add('active');if(el)el.classList.add('active');if(window.innerWidth<=768)g('sidebar').classList.remove('open');}
 document.querySelectorAll('.moverlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});});
-g('capitalStart').addEventListener('input',updateCapitalTotal);
 </script>
 </body>
 </html>
