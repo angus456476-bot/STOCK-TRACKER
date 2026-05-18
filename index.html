@@ -536,11 +536,16 @@ tbody tr:hover{background:var(--surface2);}
 </div>
 
 <script>
-window.onload = function() {
-
 var firebaseConfig={apiKey:"AIzaSyAmgfFdLpgAXe1nI-KaNXC9gGawGVK6hKM",authDomain:"stock-tracker-5e283.firebaseapp.com",projectId:"stock-tracker-5e283",storageBucket:"stock-tracker-5e283.firebasestorage.app",messagingSenderId:"459647271707",appId:"1:459647271707:web:1a7f7c232508d4e3a689be"};
-firebase.initializeApp(firebaseConfig);
-var auth=firebase.auth(),db=firebase.firestore();
+var auth, db;
+document.addEventListener('DOMContentLoaded', function() {
+  firebase.initializeApp(firebaseConfig);
+  auth=firebase.auth();
+  db=firebase.firestore();
+  // Restart auth listener after firebase init
+  auth.onAuthStateChanged(onAuthChange);
+});
+
 var FINNHUB='d7v1m8hr01qp7l70miugd7v1m8hr01qp7l70miv0';
 var INDICES=['SPY','QQQ','DIA'];
 var US_HOLIDAYS=['2025-01-01','2025-01-20','2025-02-17','2025-04-18','2025-05-26','2025-06-19','2025-07-04','2025-09-01','2025-11-27','2025-12-25','2026-01-01','2026-01-19','2026-02-16','2026-04-03','2026-05-25','2026-06-19','2026-07-04','2026-09-07','2026-11-26','2026-12-25','2027-01-01','2027-01-18','2027-02-15','2027-04-02','2027-05-31','2027-06-19','2027-07-05','2027-09-06','2027-11-25','2027-12-24'];
@@ -605,7 +610,7 @@ function loadState(){
   });
 }
 
-auth.onAuthStateChanged(function(user){
+function onAuthChange(user){
   if(user){
     currentUser=user;
     g('authScreen').style.display='none';
@@ -629,7 +634,7 @@ auth.onAuthStateChanged(function(user){
     g('authScreen').style.display='flex';
     g('appScreen').style.display='none';
   }
-});
+}
 
 function authErrMsg(c){
   var m={'auth/email-already-in-use':'此 Email 已被註冊','auth/invalid-email':'Email 格式錯誤','auth/weak-password':'密碼至少需要 6 個字元','auth/invalid-credential':'帳號或密碼錯誤','auth/user-not-found':'帳號不存在','auth/wrong-password':'密碼錯誤'};
@@ -1209,7 +1214,6 @@ document.querySelectorAll('.moverlay').forEach(function(el){
   el.addEventListener('click',function(e){if(e.target===el)el.classList.remove('open');});
 });
 
-};
 </script>
 </body>
 </html>
