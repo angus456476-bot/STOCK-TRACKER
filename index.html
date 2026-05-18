@@ -245,20 +245,20 @@ tbody tr:hover{background:var(--surface2);}
 </head>
 <body>
 <div class="toast" id="toast"></div>
-<button class="ham" onclick="toggleSidebar()">&#9776;</button>
+<button class="ham" onclick="toggleSidebar()">☰</button>
 
 <!-- Auth -->
 <div id="authScreen">
   <div class="auth-box">
-    <div class="auth-logo">&#9672; STOCK TRACKER</div>
-    <div class="auth-title">&#27979;&#35222;&#22238;&#20358;</div>
-    <div class="auth-sub">&#30331;&#20837;&#25110;&#24314;&#31435;&#24115;&#34399;</div>
+    <div class="auth-logo">◈ STOCK TRACKER</div>
+    <div class="auth-title">歡迎回來</div>
+    <div class="auth-sub">登入或建立帳號</div>
     <input class="auth-input" id="authEmail" type="email" placeholder="Email">
-    <input class="auth-input" id="authPass" type="password" placeholder="&#23494;&#30908;&#65288;&#33267;&#23569; 6 &#20491;&#65289;">
-    <label class="remember-row"><input type="checkbox" id="rememberMe"> &#35352;&#20住;&#25105;</label>
+    <input class="auth-input" id="authPass" type="password" placeholder="密碼（至少 6 位）">
+    <label class="remember-row"><input type="checkbox" id="rememberMe"> 記住我</label>
     <div class="auth-actions">
-      <button class="btn-ap" onclick="doLogin()">&#30331;&#20837;</button>
-      <button class="btn-ao" onclick="doRegister()">&#35443;&#20冊;</button>
+      <button class="btn-ap" onclick="doLogin()">登入</button>
+      <button class="btn-ao" onclick="doRegister()">註冊</button>
     </div>
     <div class="auth-error" id="authError"></div>
   </div>
@@ -267,18 +267,18 @@ tbody tr:hover{background:var(--surface2);}
 <!-- App -->
 <div id="appScreen">
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">&#9672; STOCK TRACKER</div>
+    <div class="sidebar-logo">◈ STOCK TRACKER</div>
     <nav class="nav">
-      <div class="nav-item active" onclick="navigate('dashboard',this)"><span>&#9638;</span> &#32317;&#35200;</div>
-      <div class="nav-item" onclick="navigate('holdings',this)"><span>&#9672;</span> &#25345;&#20186;</div>
-      <div class="nav-item" onclick="navigate('history',this)"><span>&#8801;</span> &#20132;&#26131;&#32000;&#37636;</div>
-      <div class="nav-item" onclick="navigate('watchlist',this)"><span>&#9676;</span> &#33258;&#36020;&#32681;</div>
+      <div class="nav-item active" onclick="navigate('dashboard',this)"><span>▦</span> 總覽</div>
+      <div class="nav-item" onclick="navigate('holdings',this)"><span>◈</span> 持倉</div>
+      <div class="nav-item" onclick="navigate('history',this)"><span>≡</span> 交易紀錄</div>
+      <div class="nav-item" onclick="navigate('watchlist',this)"><span>◎</span> 自貴義</div>
     </nav>
     <div class="sidebar-footer">
       <div class="user-email" id="userEmail"></div>
       <div class="sidebar-btns">
-        <button class="btn-logout" onclick="doLogout()">&#30331;&#20986;</button>
-        <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">&#127769;</button>
+        <button class="btn-logout" onclick="doLogout()">登出</button>
+        <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">🌙</button>
       </div>
     </div>
   </aside>
@@ -287,10 +287,10 @@ tbody tr:hover{background:var(--surface2);}
     <!-- Dashboard -->
     <div class="page active" id="page-dashboard">
       <div class="page-header">
-        <div><div class="page-title">&#32317;&#35200;</div><div class="page-sub">&#25295;&#36039;&#32068;&#21512;&#27010;&#27841;</div></div>
+        <div><div class="page-title">總覽</div><div class="page-sub">投資組合概況</div></div>
         <div class="top-bar">
-          <div class="rbar"><div class="dlive"></div><span id="lastUpdate">&#8212;</span></div>
-          <button class="btn btn-o" id="refreshBtn" onclick="refreshPrices(true)" style="font-size:16px;padding:8px 14px;">&#8635; &#26356;&#26032;</button>
+          <div class="rbar"><div class="dlive"></div><span id="lastUpdate">—</span></div>
+          <button class="btn btn-o" id="refreshBtn" onclick="refreshPrices(true)" style="font-size:16px;padding:8px 14px;">↻ 更新</button>
         </div>
       </div>
       <div class="progress-wrap" id="progressWrap">
@@ -298,21 +298,21 @@ tbody tr:hover{background:var(--surface2);}
         <div class="progress-label" id="progressLabel"></div>
       </div>
       <div class="stat-row" style="margin-bottom:14px">
-        <div class="stat-card"><div class="stat-label">&#32317;&#36039;&#37329;</div><div class="stat-value" id="totalFunds">$0.00</div></div>
-        <div class="stat-card"><div class="stat-label">&#32317;&#32183;&#31080;&#25104;&#26412;</div><div class="stat-value" id="totalCost">$0.00</div></div>
-        <div class="stat-card clickable" onclick="openCapitalModal()"><div class="stat-label">&#29616;&#37329;</div><div class="stat-value" id="cashCard">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">總資金</div><div class="stat-value" id="totalFunds">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">總股票成本</div><div class="stat-value" id="totalCost">$0.00</div></div>
+        <div class="stat-card clickable" onclick="openCapitalModal()"><div class="stat-label">現金</div><div class="stat-value" id="cashCard">$0.00</div></div>
       </div>
       <div class="stat-row" style="margin-bottom:24px">
-        <div class="stat-card clickable" onclick="openCapitalModal()"><div class="stat-label">&#36215;&#22987;&#36039;&#37329;&#65288;&#21547;&#28155;&#21152;&#65289;</div><div class="stat-value" id="capitalCard">$0.00</div></div>
-        <div class="stat-card"><div class="stat-label">&#32317;&#22577;&#37239;</div><div class="stat-value" id="totalReturn">$0.00</div></div>
-        <div class="stat-card"><div class="stat-label">&#32317;&#22577;&#37239;&#29575;</div><div class="stat-value" id="returnRate">0.00%</div></div>
+        <div class="stat-card clickable" onclick="openCapitalModal()"><div class="stat-label">起始資金（含添加）</div><div class="stat-value" id="capitalCard">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">總報酬</div><div class="stat-value" id="totalReturn">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">總報酬率</div><div class="stat-value" id="returnRate">0.00%</div></div>
       </div>
       <div class="chart-card">
         <div class="chart-header">
-          <div class="section-label">&#36039;&#37329;&#37197;&#32622;</div>
+          <div class="section-label">資金配置</div>
           <div class="toggle-group">
-            <button class="tgl active" id="togO" onclick="setChartMode('overall')">&#25972;&#39636;</button>
-            <button class="tgl" id="togD" onclick="setChartMode('detail')">&#20491;&#32183;</button>
+            <button class="tgl active" id="togO" onclick="setChartMode('overall')">整體</button>
+            <button class="tgl" id="togD" onclick="setChartMode('detail')">個股</button>
           </div>
         </div>
         <div class="chart-body">
@@ -322,11 +322,11 @@ tbody tr:hover{background:var(--surface2);}
       </div>
       <div class="chart-card">
         <div class="chart-header">
-          <div class="section-label">&#22577;&#37239;&#36234;&#21183;</div>
+          <div class="section-label">報酬走勢</div>
           <div class="toggle-group">
-            <button class="tgl active" id="togM1" onclick="setLineRange('1M')">&#26376;</button>
-            <button class="tgl" id="togM6" onclick="setLineRange('6M')">&#21665;&#24180;</button>
-            <button class="tgl" id="togY1" onclick="setLineRange('1Y')">&#19968;&#24180;</button>
+            <button class="tgl active" id="togM1" onclick="setLineRange('1M')">月</button>
+            <button class="tgl" id="togM6" onclick="setLineRange('6M')">半年</button>
+            <button class="tgl" id="togY1" onclick="setLineRange('1Y')">一年</button>
           </div>
         </div>
         <div class="line-wrap"><canvas id="lineChart"></canvas></div>
@@ -336,26 +336,26 @@ tbody tr:hover{background:var(--surface2);}
     <!-- Holdings -->
     <div class="page" id="page-holdings">
       <div class="page-header">
-        <div><div class="page-title">&#25345;&#20186;</div><div class="page-sub">&#40670;&#20擊;&#20195;&#34399;&#23637;&#38283;&#35814;&#24773;</div></div>
+        <div><div class="page-title">持倉</div><div class="page-sub">點擊代號展開詳情</div></div>
         <div class="top-bar">
-          <button class="btn btn-o" onclick="refreshPrices(true)">&#8635; &#26356;&#26032;</button>
-          <button class="btn btn-p" onclick="openTradeModal()">&#65291; &#26032;&#22686;&#20132;&#26131;</button>
+          <button class="btn btn-o" onclick="refreshPrices(true)">↻ 更新</button>
+          <button class="btn btn-p" onclick="openTradeModal()">＋ 新增交易</button>
         </div>
       </div>
       <div class="stat-row" style="margin-bottom:20px">
-        <div class="stat-card"><div class="stat-label">&#32317;&#32183;&#31080;&#25104;&#26412;</div><div class="stat-value" id="hTotalCost">$0.00</div></div>
-        <div class="stat-card"><div class="stat-label">&#32183;&#31080;&#24066;&#20540;</div><div class="stat-value" id="hTotalValue">$0.00</div></div>
-        <div class="stat-card"><div class="stat-label">&#22577;&#37239;</div><div class="stat-value" id="hReturn">$0.00</div></div>
-        <div class="stat-card"><div class="stat-label">&#22577;&#37239;&#29575;</div><div class="stat-value" id="hReturnRate">0.00%</div></div>
+        <div class="stat-card"><div class="stat-label">總股票成本</div><div class="stat-value" id="hTotalCost">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">股票市值</div><div class="stat-value" id="hTotalValue">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">報酬</div><div class="stat-value" id="hReturn">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">報酬率</div><div class="stat-value" id="hReturnRate">0.00%</div></div>
       </div>
       <div class="table-card"><div class="table-scroll">
         <table class="tbl-holdings">
           <colgroup><col class="c-sym"><col class="c-rate"><col class="c-ret"><col class="c-price"><col class="c-avg"><col class="c-cost"><col class="c-val"><col class="c-sh"></colgroup>
           <thead><tr>
-            <th class="sort-hdr" onclick="toggleSort()">&#20195;&#34399; <span id="sortIcon">&#8597;</span></th>
-            <th>&#22577;&#37239;&#29575;</th><th>&#22577;&#37239;</th><th>&#29616;&#20215;</th><th>&#22343;&#20215;</th><th>&#32317;&#25104;&#26412;</th><th>&#24066;&#20540;</th><th>&#25345;&#32183;&#25976;</th>
+            <th class="sort-hdr" onclick="toggleSort()">代號 <span id="sortIcon">↕</span></th>
+            <th>報酬率</th><th>報酬</th><th>現價</th><th>均價</th><th>總成本</th><th>市值</th><th>持股數</th>
           </tr></thead>
-          <tbody id="holdingsBody"><tr><td colspan="8" class="etd">&#23989;&#28961;&#25345;&#20186;</td></tr></tbody>
+          <tbody id="holdingsBody"><tr><td colspan="8" class="etd">嶵無持倉</td></tr></tbody>
         </table>
       </div></div>
     </div>
@@ -363,23 +363,23 @@ tbody tr:hover{background:var(--surface2);}
     <!-- History -->
     <div class="page" id="page-history">
       <div class="page-header">
-        <div><div class="page-title">&#20132;&#26131;&#32000;&#37636;</div><div class="page-sub">&#25152;&#26377;&#36023;&#36賣;&#33287;&#37197;&#24687;</div></div>
+        <div><div class="page-title">交易紀錄</div><div class="page-sub">所有買賣與配息</div></div>
         <div class="top-bar">
-          <select class="fsel" id="histFilter" onchange="renderHistory()"><option value="ALL">&#20840;&#37096;</option></select>
-          <button class="btn btn-o" onclick="openBatchModal()">&#25209;&#27425;&#36664;&#20837;</button>
-          <button class="btn btn-o" onclick="openCsvModal()">CSV &#21319;&#20837;</button>
-          <button class="btn btn-o" onclick="exportCsv()">&#21319;&#20986;</button>
-          <button class="btn btn-p" onclick="openTradeModal()">&#65291; &#26032;&#22686;</button>
+          <select class="fsel" id="histFilter" onchange="renderHistory()"><option value="ALL">全部</option></select>
+          <button class="btn btn-o" onclick="openBatchModal()">批次輸入</button>
+          <button class="btn btn-o" onclick="openCsvModal()">CSV 匯入</button>
+          <button class="btn btn-o" onclick="exportCsv()">匯出</button>
+          <button class="btn btn-p" onclick="openTradeModal()">＋ 新增</button>
         </div>
       </div>
       <div class="table-card"><div class="table-scroll">
         <table class="tbl-history">
           <colgroup><col class="c-date"><col class="c-sym"><col class="c-type"><col class="c-sh"><col class="c-price"><col class="c-amt"><col class="c-pnl"><col class="c-act"></colgroup>
           <thead><tr>
-            <th style="text-align:left">&#26085;&#26399;</th><th style="text-align:left">&#20195;&#34399;</th><th style="text-align:left">&#39006;&#22411;</th>
-            <th>&#32183;&#25976;</th><th>&#20215;&#26684;</th><th>&#37329;&#39069;</th><th>&#25439;&#30410;</th><th></th>
+            <th style="text-align:left">日期</th><th style="text-align:left">代號</th><th style="text-align:left">類型</th>
+            <th>股數</th><th>價格</th><th>金额</th><th>损益</th><th></th>
           </tr></thead>
-          <tbody id="historyBody"><tr><td colspan="8" class="etd">&#23989;&#28961;&#32000;&#37636;</td></tr></tbody>
+          <tbody id="historyBody"><tr><td colspan="8" class="etd">嶵無紀錄</td></tr></tbody>
         </table>
       </div></div>
     </div>
@@ -387,35 +387,35 @@ tbody tr:hover{background:var(--surface2);}
     <!-- Watchlist -->
     <div class="page" id="page-watchlist">
       <div class="page-header">
-        <div><div class="page-title">&#33258;&#36020;&#32681;</div><div class="page-sub">&#40670;&#20擊;&#32183;&#31080;&#21345;&#29255;&#26597;&#30475;K&#32218;&#22294;</div></div>
+        <div><div class="page-title">自貴義</div><div class="page-sub">點擊股票卡片查看K線圖</div></div>
         <div class="top-bar">
-          <button class="btn btn-o" onclick="refreshPrices(true)">&#8635; &#26356;&#26032;</button>
-          <button class="btn btn-p" onclick="openWatchModal()">&#65291; &#21152;&#20837;</button>
+          <button class="btn btn-o" onclick="refreshPrices(true)">↻ 更新</button>
+          <button class="btn btn-p" onclick="openWatchModal()">＋ 加入</button>
         </div>
       </div>
-      <div class="section-label" style="margin-bottom:12px">&#19977;&#22823;&#25351;&#25976;</div>
+      <div class="section-label" style="margin-bottom:12px">三大指數</div>
       <div class="indices-row">
-        <div class="index-card"><div class="index-name">S&amp;P 500</div><div class="index-sym">SPY</div><div class="index-price" id="idx-SPY">&#8212;</div><div class="index-change" id="idx-SPY-ch"></div></div>
-        <div class="index-card"><div class="index-name">&#32013;&#26031;&#36948;&#20811;</div><div class="index-sym">QQQ</div><div class="index-price" id="idx-QQQ">&#8212;</div><div class="index-change" id="idx-QQQ-ch"></div></div>
-        <div class="index-card"><div class="index-name">&#36947;&#29609;</div><div class="index-sym">DIA</div><div class="index-price" id="idx-DIA">&#8212;</div><div class="index-change" id="idx-DIA-ch"></div></div>
+        <div class="index-card"><div class="index-name">S&amp;P 500</div><div class="index-sym">SPY</div><div class="index-price" id="idx-SPY">—</div><div class="index-change" id="idx-SPY-ch"></div></div>
+        <div class="index-card"><div class="index-name">納斯達克</div><div class="index-sym">QQQ</div><div class="index-price" id="idx-QQQ">—</div><div class="index-change" id="idx-QQQ-ch"></div></div>
+        <div class="index-card"><div class="index-name">道瓊</div><div class="index-sym">DIA</div><div class="index-price" id="idx-DIA">—</div><div class="index-change" id="idx-DIA-ch"></div></div>
       </div>
-      <div class="section-label" style="margin-bottom:12px;margin-top:24px">&#33258;&#36020;&#32183;&#31080;</div>
-      <div class="wgrid" id="watchGrid"><div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted);font-family:var(--mono)">&#23989;&#28961;&#33258;&#36020;&#32183;&#31080;</div></div>
+      <div class="section-label" style="margin-bottom:12px;margin-top:24px">自選股票</div>
+      <div class="wgrid" id="watchGrid"><div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted);font-family:var(--mono)">嶵無自選股票</div></div>
       <div class="compare-card">
         <div class="chart-header">
-          <div class="section-label">&#32183;&#31080;&#23565;&#29231;</div>
+          <div class="section-label">股票對照</div>
           <div class="toggle-group">
-            <button class="tgl active" id="cmpM1" onclick="setCmpRange('1M')">&#26376;</button>
-            <button class="tgl" id="cmpM6" onclick="setCmpRange('6M')">&#21665;&#24180;</button>
-            <button class="tgl" id="cmpY1" onclick="setCmpRange('1Y')">&#19968;&#24180;</button>
+            <button class="tgl active" id="cmpM1" onclick="setCmpRange('1M')">月</button>
+            <button class="tgl" id="cmpM6" onclick="setCmpRange('6M')">半年</button>
+            <button class="tgl" id="cmpY1" onclick="setCmpRange('1Y')">一年</button>
           </div>
         </div>
         <div class="compare-selects">
-          <select class="fsel" id="cmpSym1" onchange="renderCompare()"><option value="">&#36020;&#25799;&#32183;&#31080; A</option></select>
+          <select class="fsel" id="cmpSym1" onchange="renderCompare()"><option value="">選擇股票 A</option></select>
           <span class="compare-vs">vs</span>
-          <select class="fsel" id="cmpSym2" onchange="renderCompare()"><option value="">&#36020;&#25799;&#32183;&#31080; B</option></select>
+          <select class="fsel" id="cmpSym2" onchange="renderCompare()"><option value="">選擇股票 B</option></select>
         </div>
-        <table class="compare-table" id="compareTable"><tr><td colspan="3" style="color:var(--muted);font-family:var(--mono);font-size:17px;padding:20px">&#35531;&#36020;&#25799;&#20兩;&#25903;&#32183;&#31080;</td></tr></table>
+        <table class="compare-table" id="compareTable"><tr><td colspan="3" style="color:var(--muted);font-family:var(--mono);font-size:17px;padding:20px">請選擇兩支股票</td></tr></table>
         <div class="compare-line-wrap"><canvas id="compareChart"></canvas></div>
       </div>
     </div>
@@ -426,21 +426,21 @@ tbody tr:hover{background:var(--surface2);}
 <div class="candle-overlay" id="candleOverlay">
   <div class="candle-modal">
     <div class="candle-header">
-      <div><div class="candle-sym" id="candleSym">&#8212;</div><div class="candle-price" id="candlePrice"></div></div>
-      <button class="candle-close" onclick="closeCandleModal()">&#10005;</button>
+      <div><div class="candle-sym" id="candleSym">—</div><div class="candle-price" id="candlePrice"></div></div>
+      <button class="candle-close" onclick="closeCandleModal()">✕</button>
     </div>
     <div class="candle-controls">
       <div class="toggle-group">
-        <button class="tgl active" id="kM1" onclick="setCandleRange('1M')">&#26376;</button>
-        <button class="tgl" id="kM3" onclick="setCandleRange('3M')">3&#26376;</button>
-        <button class="tgl" id="kM6" onclick="setCandleRange('6M')">&#21665;&#24180;</button>
-        <button class="tgl" id="kY1" onclick="setCandleRange('1Y')">&#19968;&#24180;</button>
+        <button class="tgl active" id="kM1" onclick="setCandleRange('1M')">月</button>
+        <button class="tgl" id="kM3" onclick="setCandleRange('3M')">3月</button>
+        <button class="tgl" id="kM6" onclick="setCandleRange('6M')">半年</button>
+        <button class="tgl" id="kY1" onclick="setCandleRange('1Y')">一年</button>
       </div>
       <div class="indicator-toggle">
         <button class="ind-btn" id="ind-ema50" onclick="toggleIndicator('ema50')">EMA 50</button>
         <button class="ind-btn" id="ind-ema200" onclick="toggleIndicator('ema200')">EMA 200</button>
-        <button class="ind-btn" id="ind-bb" onclick="toggleIndicator('bb')">&#24067;&#26519;&#36890;&#36947;</button>
-        <button class="ind-btn" id="ind-vol" onclick="toggleIndicator('vol')">&#25104;&#20132;&#37327;</button>
+        <button class="ind-btn" id="ind-bb" onclick="toggleIndicator('bb')">布林通道</button>
+        <button class="ind-btn" id="ind-vol" onclick="toggleIndicator('vol')">成交量</button>
       </div>
     </div>
     <div class="candle-wrap"><canvas id="candleChart"></canvas></div>
@@ -451,20 +451,20 @@ tbody tr:hover{background:var(--surface2);}
 <!-- Trade Modal -->
 <div class="moverlay" id="tradeModal">
   <div class="modal">
-    <div class="mtitle" id="tradeMTitle">&#26032;&#22686;&#20132;&#26131;</div>
+    <div class="mtitle" id="tradeMTitle">新增交易</div>
     <div class="ttype">
-      <button class="ttbtn buy active" id="typeBuy" onclick="setTType('buy')">&#36023;&#20837;</button>
-      <button class="ttbtn sell" id="typeSell" onclick="setTType('sell')">&#36023;&#20986;</button>
+      <button class="ttbtn buy active" id="typeBuy" onclick="setTType('buy')">買入</button>
+      <button class="ttbtn sell" id="typeSell" onclick="setTType('sell')">賣出</button>
     </div>
-    <div class="fg"><label class="fl">&#32183;&#31080;&#20195;&#34399;</label><input class="fi" id="tSym" placeholder="&#22914; AAPL" oninput="this.value=this.value.toUpperCase()"></div>
+    <div class="fg"><label class="fl">股票代號</label><input class="fi" id="tSym" placeholder="如 AAPL" oninput="this.value=this.value.toUpperCase()"></div>
     <div class="frow">
-      <div class="fg"><label class="fl">&#32183;&#25976;</label><input class="fi" id="tShares" type="number" min="0.001" step="any" placeholder="0"></div>
-      <div class="fg"><label class="fl">&#20215;&#26684; (USD)</label><input class="fi" id="tPrice" type="number" min="0.01" step="any" placeholder="0.00"></div>
+      <div class="fg"><label class="fl">股數</label><input class="fi" id="tShares" type="number" min="0.001" step="any" placeholder="0"></div>
+      <div class="fg"><label class="fl">價格 (USD)</label><input class="fi" id="tPrice" type="number" min="0.01" step="any" placeholder="0.00"></div>
     </div>
-    <div class="fg"><label class="fl">&#26085;&#26399;</label><input class="fi" id="tDate" type="date"></div>
+    <div class="fg"><label class="fl">日期</label><input class="fi" id="tDate" type="date"></div>
     <div class="factions">
-      <button class="btn btn-o" onclick="closeModal('tradeModal')">&#21462;&#28040;</button>
-      <button class="btn btn-p" onclick="submitTrade()">&#30906;&#35469;</button>
+      <button class="btn btn-o" onclick="closeModal('tradeModal')">取消</button>
+      <button class="btn btn-p" onclick="submitTrade()">確認</button>
     </div>
   </div>
 </div>
@@ -472,20 +472,20 @@ tbody tr:hover{background:var(--surface2);}
 <!-- Capital Modal -->
 <div class="moverlay" id="capitalModal">
   <div class="modal modal-wide">
-    <div class="mtitle">&#36039;&#37329;&#31649;&#29702;</div>
+    <div class="mtitle">資金管理</div>
     <div class="fg">
-      <label class="fl">&#36215;&#22987;&#36039;&#37329; (USD)</label>
+      <label class="fl">起始資金 (USD)</label>
       <input class="fi" id="capitalStart" type="number" min="0" step="any" placeholder="0.00" oninput="updateCapitalTotal()">
     </div>
     <div class="fg">
-      <label class="fl">&#28155;&#21152;&#36039;&#37329;&#32000;&#37636;</label>
+      <label class="fl">添加資金記錄</label>
       <div id="capitalAddRows"></div>
-      <button class="btn btn-o" onclick="addCapitalRow()" style="margin-top:10px;font-size:16px;padding:8px 14px">&#65291; &#26032;&#22686;&#19968;&#31155;</button>
+      <button class="btn btn-o" onclick="addCapitalRow()" style="margin-top:10px;font-size:16px;padding:8px 14px">＋ 新增一禳</button>
     </div>
-    <div class="capital-total">&#21512;&#35336;&#25295;&#20837;&#65306;$<span id="capitalTotal">0.00</span></div>
+    <div class="capital-total">合計投入：$<span id="capitalTotal">0.00</span></div>
     <div class="factions">
-      <button class="btn btn-o" onclick="closeModal('capitalModal')">&#21462;&#28040;</button>
-      <button class="btn btn-p" onclick="saveCapital()">&#20648;&#23384;</button>
+      <button class="btn btn-o" onclick="closeModal('capitalModal')">取消</button>
+      <button class="btn btn-p" onclick="saveCapital()">儲存</button>
     </div>
   </div>
 </div>
@@ -493,14 +493,14 @@ tbody tr:hover{background:var(--surface2);}
 <!-- Batch Modal -->
 <div class="moverlay" id="batchModal">
   <div class="modal" style="width:700px">
-    <div class="mtitle">&#25209;&#27425;&#36664;&#20837;</div>
+    <div class="mtitle">批次輸入</div>
     <div style="overflow-x:auto">
-      <table class="batch-table"><thead><tr><th>&#39006;&#22411;</th><th>&#20195;&#34399;</th><th>&#32183;&#25976;</th><th>&#20215;&#26684;</th><th>&#26085;&#26399;</th><th></th></tr></thead><tbody id="batchBody"></tbody></table>
+      <table class="batch-table"><thead><tr><th>類型</th><th>代號</th><th>股數</th><th>價格</th><th>日期</th><th></th></tr></thead><tbody id="batchBody"></tbody></table>
     </div>
-    <button class="btn btn-o" onclick="addBatchRow()" style="margin-bottom:16px">&#65291; &#26032;&#22686;&#19968;&#34892;</button>
+    <button class="btn btn-o" onclick="addBatchRow()" style="margin-bottom:16px">＋ 新增一行</button>
     <div class="factions">
-      <button class="btn btn-o" onclick="closeModal('batchModal')">&#21462;&#28040;</button>
-      <button class="btn btn-p" onclick="submitBatch()">&#30906;&#35469;&#21319;&#20837;</button>
+      <button class="btn btn-o" onclick="closeModal('batchModal')">取消</button>
+      <button class="btn btn-p" onclick="submitBatch()">確認升入</button>
     </div>
   </div>
 </div>
@@ -508,17 +508,17 @@ tbody tr:hover{background:var(--surface2);}
 <!-- CSV Modal -->
 <div class="moverlay" id="csvModal">
   <div class="modal modal-wide">
-    <div class="mtitle">CSV &#21319;&#20837;</div>
-    <div class="fg"><label class="fl">&#36020;&#25799; CSV &#27383;&#26696;</label><input class="fi" type="file" id="csvFile" accept=".csv" onchange="previewCsv(this)"></div>
+    <div class="mtitle">CSV 匯入</div>
+    <div class="fg"><label class="fl">選擇 CSV 檔案</label><input class="fi" type="file" id="csvFile" accept=".csv" onchange="previewCsv(this)"></div>
     <div id="csvPreviewWrap" style="display:none">
-      <div class="section-label" style="margin-bottom:10px">&#39044;&#35272;&#65288;<span id="csvCount">0</span> &#31155;&#65292;&#24037;&#20551;&#26085;&#26399;&#25490;&#24207;&#65289;</div>
+      <div class="section-label" style="margin-bottom:10px">預覽（<span id="csvCount">0</span> 禳，工假日期排序）</div>
       <div class="csv-preview" id="csvPreview"></div>
     </div>
-    <div style="margin-bottom:12px;font-family:var(--mono);font-size:15px;color:var(--muted)">&#25�;&#25345;&#26684;&#24335;&#65306;&#26085;&#26399;&#12289;&#20132;&#26131;&#39006;&#21029;&#65288;&#36023;&#36827;/&#36023;&#20986;/&#32183;&#24687;&#65289;&#12289;&#25976;&#37327;&#12289;&#20195;&#34399;&#12289;&#29739;&#25113;&#39006;&#21029;&#12289;&#20215;&#26684;</div>
-    <button class="btn btn-o" onclick="downloadTemplate()" style="margin-bottom:16px">&#11015; &#19979;&#36617;&#31684;&#26412;</button>
+    <div style="margin-bottom:12px;font-family:var(--mono);font-size:15px;color:var(--muted)">支援格式：日期、交易類別（買進/賣出/股息）、數量、代號、賬戶類別、價格</div>
+    <button class="btn btn-o" onclick="downloadTemplate()" style="margin-bottom:16px">⬇ 下載範本</button>
     <div class="factions">
-      <button class="btn btn-o" onclick="closeModal('csvModal')">&#21462;&#28040;</button>
-      <button class="btn btn-p" id="csvImportBtn" onclick="importCsv()" style="display:none">&#30906;&#35469;&#21319;&#20837;</button>
+      <button class="btn btn-o" onclick="closeModal('csvModal')">取消</button>
+      <button class="btn btn-p" id="csvImportBtn" onclick="importCsv()" style="display:none">確認升入</button>
     </div>
   </div>
 </div>
@@ -526,16 +526,18 @@ tbody tr:hover{background:var(--surface2);}
 <!-- Watch Modal -->
 <div class="moverlay" id="watchModal">
   <div class="modal">
-    <div class="mtitle">&#21152;&#20837;&#33258;&#36020;&#32183;&#31080;</div>
-    <div class="fg"><label class="fl">&#32183;&#31080;&#20195;&#34399;</label><input class="fi" id="wSym" placeholder="&#22914; NVDA" oninput="this.value=this.value.toUpperCase()"></div>
+    <div class="mtitle">加入自選股票</div>
+    <div class="fg"><label class="fl">股票代號</label><input class="fi" id="wSym" placeholder="如 NVDA" oninput="this.value=this.value.toUpperCase()"></div>
     <div class="factions">
-      <button class="btn btn-o" onclick="closeModal('watchModal')">&#21462;&#28040;</button>
-      <button class="btn btn-p" onclick="submitWatch()">&#21152;&#20837;</button>
+      <button class="btn btn-o" onclick="closeModal('watchModal')">取消</button>
+      <button class="btn btn-p" onclick="submitWatch()">加入</button>
     </div>
   </div>
 </div>
 
 <script>
+window.onload = function() {
+
 var firebaseConfig={apiKey:"AIzaSyAmgfFdLpgAXe1nI-KaNXC9gGawGVK6hKM",authDomain:"stock-tracker-5e283.firebaseapp.com",projectId:"stock-tracker-5e283",storageBucket:"stock-tracker-5e283.firebasestorage.app",messagingSenderId:"459647271707",appId:"1:459647271707:web:1a7f7c232508d4e3a689be"};
 firebase.initializeApp(firebaseConfig);
 var auth=firebase.auth(),db=firebase.firestore();
@@ -688,12 +690,12 @@ function fetchCandles(sym,from,to){
 
 function refreshPrices(manual){
   manual=manual!==false;
-  var btn=g('refreshBtn');btn.disabled=true;btn.innerHTML='&#8635; 更新中...';
+  var btn=g('refreshBtn');btn.disabled=true;btn.innerHTML='↻ 更新中...';
   var holdKeys=Object.keys(holdings);
   var syms=[];
   var seen={};
   holdKeys.concat(state.watchlist).concat(INDICES).forEach(function(s){if(!seen[s]){seen[s]=1;syms.push(s);}});
-  if(!syms.length){btn.disabled=false;btn.innerHTML='&#8635; 更新';renderAll();return Promise.resolve();}
+  if(!syms.length){btn.disabled=false;btn.innerHTML='↻ 更新';renderAll();return Promise.resolve();}
   var pw=g('progressWrap'),pf=g('progressFill'),pl=g('progressLabel');
   pw.style.display='block';pf.style.width='0%';
   var ok=0,fail=0,i=0;
@@ -703,7 +705,7 @@ function refreshPrices(manual){
       setTimeout(function(){pw.style.display='none';},800);
       state.lastPriceUpdate=today();
       g('lastUpdate').textContent=new Date().toLocaleTimeString('zh-TW');
-      btn.disabled=false;btn.innerHTML='&#8635; 更新';
+      btn.disabled=false;btn.innerHTML='↻ 更新';
       if(isUSTradeDay())takeSnapshot();
       return saveState().then(function(){
         renderAll();
@@ -917,7 +919,7 @@ function renderWatchlist(){
     var p=state.prices[sym],ch=(state.priceChanges||{})[sym];
     var chStr=ch&&ch.pct!=null?'<div class="wchange '+(ch.pct>=0?'pos':'neg')+'">'+(ch.pct>=0?'+':'')+ch.pct.toFixed(2)+'%</div>':'';
     return '<div class="wcard" onclick="openCandleModal(\''+sym+'\')">'
-      +'<button class="wrem" onclick="event.stopPropagation();removeWatch(\''+sym+'\')">&#215;</button>'
+      +'<button class="wrem" onclick="event.stopPropagation();removeWatch(\''+sym+'\')">×</button>'
       +'<div class="wsym">'+sym+'</div>'
       +'<div class="wprice">'+(p?'$'+fmt(p):'—')+'</div>'+chStr+'</div>';
   }).join('');
@@ -1206,6 +1208,8 @@ function navigate(page,el){
 document.querySelectorAll('.moverlay').forEach(function(el){
   el.addEventListener('click',function(e){if(e.target===el)el.classList.remove('open');});
 });
+
+};
 </script>
 </body>
 </html>
