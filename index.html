@@ -272,7 +272,7 @@ tbody tr:hover{background:var(--surface2);}
       <div class="nav-item active" onclick="navigate('dashboard',this)"><span>▦</span> 總覽</div>
       <div class="nav-item" onclick="navigate('holdings',this)"><span>◈</span> 持倉</div>
       <div class="nav-item" onclick="navigate('history',this)"><span>≡</span> 交易紀錄</div>
-      <div class="nav-item" onclick="navigate('watchlist',this)"><span>◎</span> 自貴義</div>
+      <div class="nav-item" onclick="navigate('watchlist',this)"><span>◎</span> 自選股</div>
     </nav>
     <div class="sidebar-footer">
       <div class="user-email" id="userEmail"></div>
@@ -355,7 +355,7 @@ tbody tr:hover{background:var(--surface2);}
             <th class="sort-hdr" onclick="toggleSort()">代號 <span id="sortIcon">↕</span></th>
             <th>報酬率</th><th>報酬</th><th>現價</th><th>均價</th><th>總成本</th><th>市值</th><th>持股數</th>
           </tr></thead>
-          <tbody id="holdingsBody"><tr><td colspan="8" class="etd">嶵無持倉</td></tr></tbody>
+          <tbody id="holdingsBody"><tr><td colspan="8" class="etd">尚無持倉</td></tr></tbody>
         </table>
       </div></div>
     </div>
@@ -379,7 +379,7 @@ tbody tr:hover{background:var(--surface2);}
             <th style="text-align:left">日期</th><th style="text-align:left">代號</th><th style="text-align:left">類型</th>
             <th>股數</th><th>價格</th><th>金额</th><th>损益</th><th></th>
           </tr></thead>
-          <tbody id="historyBody"><tr><td colspan="8" class="etd">嶵無紀錄</td></tr></tbody>
+          <tbody id="historyBody"><tr><td colspan="8" class="etd">尚無紀錄</td></tr></tbody>
         </table>
       </div></div>
     </div>
@@ -387,7 +387,7 @@ tbody tr:hover{background:var(--surface2);}
     <!-- Watchlist -->
     <div class="page" id="page-watchlist">
       <div class="page-header">
-        <div><div class="page-title">自貴義</div><div class="page-sub">點擊股票卡片查看K線圖</div></div>
+        <div><div class="page-title">自選股</div><div class="page-sub">點擊股票卡片查看K線圖</div></div>
         <div class="top-bar">
           <button class="btn btn-o" onclick="refreshPrices(true)">↻ 更新</button>
           <button class="btn btn-p" onclick="openWatchModal()">＋ 加入</button>
@@ -400,7 +400,7 @@ tbody tr:hover{background:var(--surface2);}
         <div class="index-card"><div class="index-name">道瓊</div><div class="index-sym">DIA</div><div class="index-price" id="idx-DIA">—</div><div class="index-change" id="idx-DIA-ch"></div></div>
       </div>
       <div class="section-label" style="margin-bottom:12px;margin-top:24px">自選股票</div>
-      <div class="wgrid" id="watchGrid"><div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted);font-family:var(--mono)">嶵無自選股票</div></div>
+      <div class="wgrid" id="watchGrid"><div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted);font-family:var(--mono)">尚無自選股</div></div>
       <div class="compare-card">
         <div class="chart-header">
           <div class="section-label">股票對照</div>
@@ -500,7 +500,7 @@ tbody tr:hover{background:var(--surface2);}
     <button class="btn btn-o" onclick="addBatchRow()" style="margin-bottom:16px">＋ 新增一行</button>
     <div class="factions">
       <button class="btn btn-o" onclick="closeModal('batchModal')">取消</button>
-      <button class="btn btn-p" onclick="submitBatch()">確認升入</button>
+      <button class="btn btn-p" onclick="submitBatch()">確認匯入</button>
     </div>
   </div>
 </div>
@@ -526,7 +526,7 @@ tbody tr:hover{background:var(--surface2);}
 <!-- Watch Modal -->
 <div class="moverlay" id="watchModal">
   <div class="modal">
-    <div class="mtitle">加入自選股票</div>
+    <div class="mtitle">加入自選股</div>
     <div class="fg"><label class="fl">股票代號</label><input class="fi" id="wSym" placeholder="如 NVDA" oninput="this.value=this.value.toUpperCase()"></div>
     <div class="factions">
       <button class="btn btn-o" onclick="closeModal('watchModal')">取消</button>
