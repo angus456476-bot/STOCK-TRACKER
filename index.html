@@ -1093,6 +1093,8 @@ function submitTrade(){
 }
 
 function openWatchModal(){g('wSym').value='';g('watchModal').classList.add('open');}
+function openCsvModal(){csvParsed=[];g('csvFile').value='';g('csvPreviewWrap').style.display='none';g('csvImportBtn').style.display='none';g('csvModal').classList.add('open');}
+function openCashModal(){g('cashInput').value=state.cash||0;g('cashModal').classList.add('open');}
 function submitWatch(){
   var sym=g('wSym').value.trim().toUpperCase();if(!sym)return;
   if(state.watchlist.indexOf(sym)===-1){
